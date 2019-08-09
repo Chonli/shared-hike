@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "705682166229",
+    "firebase_url": "https://shared-hike.firebaseio.com",
+    "project_id": "shared-hike",
+    "storage_bucket": "shared-hike.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:705682166229:android:878ec8635bbcc731",
+        "android_client_info": {
+          "package_name": "com.apa.shared_hike"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "705682166229-20t76eghv3snjd994djkvbeg62v08emc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwTendBPEkoeQXcc57GMsAaMUpsh_3_W4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "705682166229-20t76eghv3snjd994djkvbeg62v08emc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
