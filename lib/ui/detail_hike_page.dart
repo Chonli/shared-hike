@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../db/hike.dart';
 
 class DetailHikePage extends StatelessWidget {
@@ -15,7 +16,7 @@ class DetailHikePage extends StatelessWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            //Text(_hike.releaseDate.toIso8601String()),
+            Text(DateFormat("dd/MM/yyyy").format(_hike.hikeDate)),
             Row(children: [
               Text(_hike.distance.toString()),
               Text("km "),

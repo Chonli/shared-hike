@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
       ),
       body: Center(
         child: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection('hikes').snapshots(),
+          stream: Firestore.instance.collection('hikes').orderBy('hikeDate').snapshots(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError)
               return new Text('Error: ${snapshot.error}');

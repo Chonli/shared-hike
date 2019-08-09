@@ -7,16 +7,16 @@ class Hike {
   String _image;
   int _distance;
   int _elevation;
-  DateTime _releaseDate;
+  DateTime _hikeDate;
 
-  Hike(this._id, this._title, this._description, this._image, this._elevation, this._distance, this._releaseDate);
+  Hike(this._id, this._title, this._description, this._image, this._elevation, this._distance, this._hikeDate);
 
   String get id => _id;
   String get title => _title;
   String get description => _description;
   int get distance => _distance;
   int get elevation => _elevation;
-  DateTime get releaseDate =>  _releaseDate;
+  DateTime get hikeDate =>  _hikeDate;
   String get image => _image;
 
   Hike.fromSnapshot(DocumentSnapshot snapshot) {
@@ -25,7 +25,7 @@ class Hike {
     _description = snapshot['description'];
     _distance = snapshot['distance'];
     _elevation = snapshot['elevation'];
-    //_releaseDate = snapshot['release_date'];
+    _hikeDate = DateTime.fromMillisecondsSinceEpoch(snapshot['hikeDate'].millisecondsSinceEpoch);
     _image = snapshot['image'];
   }
 
