@@ -28,6 +28,8 @@ dependencies:
   firebase_core: ^0.4.0+8
   firebase_auth: ^0.14.0+1
   cloud_firestore: ^0.12.9
+  flutter_bloc: ^0.20.1
+  equatable: ^0.4.0
   intl: ^0.15.8
 
 dev_dependencies:

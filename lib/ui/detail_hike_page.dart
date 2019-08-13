@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../db/hike.dart';
+import 'package:shared_hike/db/hike.dart';
 
 class DetailHikePage extends StatelessWidget {
   final Hike _hike;
