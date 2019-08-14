@@ -6,6 +6,8 @@ class AddHikeState {
   final bool isDescriptionValid;
   final bool isDateValid;
   final bool isNumberGuestValid;
+  final bool isElevationValid;
+  final bool isDistanceValid;
   final bool isSubmitting;
   final bool isSuccess;
   final bool isFailure;
@@ -17,6 +19,8 @@ class AddHikeState {
     @required this.isDescriptionValid,
     @required this.isDateValid,
     @required this.isNumberGuestValid,
+    this.isElevationValid,
+    this.isDistanceValid,
     @required this.isSubmitting,
     @required this.isSuccess,
     @required this.isFailure,
@@ -28,6 +32,8 @@ class AddHikeState {
       isDescriptionValid: true,
       isDateValid: true,
       isNumberGuestValid: true,
+      isElevationValid: true,
+      isDistanceValid: true,
       isSubmitting: false,
       isSuccess: false,
       isFailure: false,
@@ -40,6 +46,8 @@ class AddHikeState {
       isDescriptionValid: true,
       isDateValid: true,
       isNumberGuestValid: true,
+      isElevationValid: true,
+      isDistanceValid: true,
       isSubmitting: true,
       isSuccess: false,
       isFailure: false,
@@ -52,6 +60,8 @@ class AddHikeState {
       isDescriptionValid: true,
       isDateValid: true,
       isNumberGuestValid: true,
+      isElevationValid: true,
+      isDistanceValid: true,
       isSubmitting: false,
       isSuccess: false,
       isFailure: true,
@@ -64,6 +74,8 @@ class AddHikeState {
       isDescriptionValid: true,
       isDateValid: true,
       isNumberGuestValid: true,
+      isElevationValid: true,
+      isDistanceValid: true,
       isSubmitting: false,
       isSuccess: true,
       isFailure: false,
@@ -75,12 +87,16 @@ class AddHikeState {
     bool isDescriptionValid,
     bool isDateValid,
     bool isNumberGuestValid,
+    bool isElevationValid,
+    bool isDistanceValid,
   }) {
     return copyWith(
       isTitleValid: isTitleValid,
       isDescriptionValid: isDescriptionValid,
       isDateValid: isDateValid,
       isNumberGuestValid: isNumberGuestValid,
+      isElevationValid: isElevationValid,
+      isDistanceValid: isDistanceValid,
       isSubmitting: false,
       isSuccess: false,
       isFailure: false,
@@ -92,7 +108,8 @@ class AddHikeState {
     bool isDescriptionValid,
     bool isDateValid,
     bool isNumberGuestValid,
-    bool isSubmitEnabled,
+    bool isElevationValid,
+    bool isDistanceValid,
     bool isSubmitting,
     bool isSuccess,
     bool isFailure,
@@ -102,6 +119,8 @@ class AddHikeState {
       isDescriptionValid: isDescriptionValid ?? this.isDescriptionValid,
       isDateValid: isDateValid ?? this.isDateValid,
       isNumberGuestValid: isNumberGuestValid ?? this.isNumberGuestValid,
+      isElevationValid: isElevationValid ?? this.isElevationValid,
+      isDistanceValid: isDistanceValid ?? this.isDistanceValid,
       isSubmitting: isSubmitting ?? this.isSubmitting,
       isSuccess: isSuccess ?? this.isSuccess,
       isFailure: isFailure ?? this.isFailure,
@@ -115,6 +134,8 @@ class AddHikeState {
       isDescriptionValid: $isDescriptionValid,
       isDateValid: $isDateValid,
       isNumberGuestValid: $isNumberGuestValid,
+      isElevationValid: $isElevationValid,
+      isDistanceValid: $isDistanceValid,
       isSubmitting: $isSubmitting,
       isSuccess: $isSuccess,
       isFailure: $isFailure,

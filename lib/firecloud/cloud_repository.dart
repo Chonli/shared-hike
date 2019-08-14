@@ -11,18 +11,26 @@ class CloudRepository {
     return _firestore.collection('hikes').orderBy('hikeDate').snapshots();
   }
 
-  Future<void> createHike(String title, String description/*Hike hike*/) async {
-    print('Add hike ${title} to firestore');
+  Future<void> createHike(
+    String title,
+    String description,
+    DateTime date,
+    int distance,
+    int elevation,
+    String owner,
+    /*Hike hike*/
+  ) async {
+    print('Add hike $title to firestore');
     try {
       await _firestore.collection('hikes').add({
         'title': title,
         'description': description,
-/*        'owner': hike.owner,
-        'numberGuest': hike.numberGuest,
-        'elevation': hike.elevation,
-        'distance': hike.distance,
-        'image': hike.image,
-        'hikeDate': hike.hikeDate*/
+        'hikeDate': date,
+        'owner': owner,
+        //'numberGuest': hike.numberGuest,
+        'elevation': elevation,
+        'distance': distance,
+        //'image': hike.image,
       });
 /*      await _firestore.collection('hikes').add({
         'title': hike.title,

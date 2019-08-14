@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
         home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
             return state is AuthenticatedState
-                ? HomePage(cloudRepository: _cloudRepository, user: state.displayName, title: _title)
+                ? HomePage(cloudRepository: _cloudRepository, currentUser: state.displayName, title: _title)
                 : LoginPage(userRepository: _userRepository);
           },
         ),

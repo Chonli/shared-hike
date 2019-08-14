@@ -6,10 +6,12 @@ import 'package:shared_hike/ui/add_hike_form.dart';
 
 class AddHikePage extends StatelessWidget {
   final CloudRepository _cloudRepository;
+  final String _currentUser;
 
-  AddHikePage({Key key, @required CloudRepository cloudRepository})
+  AddHikePage({Key key, @required CloudRepository cloudRepository, @required String currentUser})
       : assert(cloudRepository != null),
         _cloudRepository = cloudRepository,
+        _currentUser = currentUser,
         super(key: key);
 
   @override
@@ -21,7 +23,7 @@ class AddHikePage extends StatelessWidget {
       body: Center(
         child: BlocProvider<AddHikeBloc>(
           builder: (context) => AddHikeBloc(cloudRepository: _cloudRepository),
-          child: AddHikeForm(),
+          child: AddHikeForm(currentUser: _currentUser),
         ),
       ),
     );
