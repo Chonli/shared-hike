@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import './bloc.dart';
-import 'package:shared_hike/firebase_login/user_repository.dart';
+import 'package:shared_hike/fireauth/user_repository.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 

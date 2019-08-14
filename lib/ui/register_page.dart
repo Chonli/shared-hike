@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_hike/firebase_login/register_bloc/bloc.dart';
-import 'package:shared_hike/firebase_login/user_repository.dart';
+import 'package:shared_hike/fireauth/register_bloc/bloc.dart';
+import 'package:shared_hike/fireauth/user_repository.dart';
 import 'package:shared_hike/ui/register_form.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -15,7 +15,7 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Register')),
+      appBar: AppBar(title: Text('Créer compte')),
       body: Center(
         child: BlocProvider<RegisterBloc>(
           builder: (context) => RegisterBloc(userRepository: _userRepository),

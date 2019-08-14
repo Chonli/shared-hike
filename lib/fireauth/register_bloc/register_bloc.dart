@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:shared_hike/firebase_login/user_repository.dart';
-import 'package:shared_hike/firebase_login/register_bloc/bloc.dart';
+import 'package:shared_hike/fireauth/user_repository.dart';
+import 'package:shared_hike/fireauth/register_bloc/bloc.dart';
 import 'package:shared_hike/util/validators.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {

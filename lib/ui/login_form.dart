@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_hike/firebase_login/user_repository.dart';
-import 'package:shared_hike/firebase_login/authentication_bloc/bloc.dart';
-import 'package:shared_hike/firebase_login/login_bloc/bloc.dart';
+import 'package:shared_hike/fireauth/user_repository.dart';
+import 'package:shared_hike/fireauth/authentication_bloc/bloc.dart';
+import 'package:shared_hike/fireauth/login_bloc/bloc.dart';
 import 'package:shared_hike/ui/register_page.dart';
 
 class LoginForm extends StatefulWidget {
