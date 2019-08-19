@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:shared_hike/db/hike.dart';
 import 'package:shared_hike/firecloud/cloud_repository.dart';
 import './bloc.dart';
 
@@ -27,14 +26,16 @@ class AddHikeBloc extends Bloc<AddHikeEvent, AddHikeState> {
           event is! DescriptionChanged &&
           event is! DateChanged &&
           event is! ElevationChanged &&
-          event is! DistanceChanged);
+          event is! DistanceChanged &&
+          event is! UrlImageChanged);
     });
     final debounceStream = observableStream.where((event) {
       return (event is TitleChanged ||
           event is DescriptionChanged ||
           event is DateChanged ||
           event is ElevationChanged ||
-          event is DistanceChanged);
+          event is DistanceChanged ||
+          event is UrlImageChanged);
     }).debounceTime(Duration(milliseconds: 300));
     return super.transform(nonDebounceStream.mergeWith([debounceStream]), next);
   }
@@ -53,6 +54,8 @@ class AddHikeBloc extends Bloc<AddHikeEvent, AddHikeState> {
       yield* _mapDistanceChangedToState(event.distance);
     } else if (event is ElevationChanged) {
       yield* _mapElevationChangedToState(event.elevation);
+    } else if (event is UrlImageChanged) {
+      yield* _mapUrlImageChangedToState(event.urlImage);
     } else if (event is Submitted) {
       yield* _mapFormSubmittedToState(
         event.title,
@@ -61,6 +64,7 @@ class AddHikeBloc extends Bloc<AddHikeEvent, AddHikeState> {
         event.distance,
         event.elevation,
         event.owner,
+        event.urlImage,
       );
     }
   }
@@ -96,13 +100,20 @@ class AddHikeBloc extends Bloc<AddHikeEvent, AddHikeState> {
     );
   }
 
+  Stream<AddHikeState> _mapUrlImageChangedToState(String urlImage) async* {
+    yield currentState.update(
+      isImageValid: urlImage.isNotEmpty,
+    );
+  }
+
   Stream<AddHikeState> _mapFormSubmittedToState(
       String title,
       String description,
       DateTime date,
       int distance,
       int elevation,
-      String owner) async* {
+      String owner,
+      String urlImage,) async* {
     yield AddHikeState.loading();
     try {
       await _cloudRepository.createHike(
@@ -112,6 +123,7 @@ class AddHikeBloc extends Bloc<AddHikeEvent, AddHikeState> {
         distance,
         elevation,
         owner,
+        urlImage,
       );
       yield AddHikeState.success();
     } catch (_) {

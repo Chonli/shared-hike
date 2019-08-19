@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_hike/fireauth/authentication_bloc/bloc.dart';
 import 'package:shared_hike/firecloud/addhike_bloc/bloc.dart';
 
 class AddHikeForm extends StatefulWidget {
@@ -22,6 +21,7 @@ class _AddHikeFormState extends State<AddHikeForm>
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _distanceController = TextEditingController();
   final TextEditingController _elevationController = TextEditingController();
+  final TextEditingController _imageController = TextEditingController();
   AddHikeBloc _addHikeBloc;
   bool isloading = false;
   DateTime _selectDate;
@@ -45,6 +45,7 @@ class _AddHikeFormState extends State<AddHikeForm>
     _descriptionController.addListener(_onDescriptionChanged);
     _distanceController.addListener(_onDistanceChanged);
     _elevationController.addListener(_onElevationChanged);
+    _imageController.addListener(_onImageChanged);
   }
 
   @override
@@ -89,8 +90,7 @@ class _AddHikeFormState extends State<AddHikeForm>
                 return Padding(
                   padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                   child: Form(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    child: ListView(
                       children: <Widget>[
                         TextFormField(
                           controller: _titleController,
@@ -123,9 +123,25 @@ class _AddHikeFormState extends State<AddHikeForm>
                           },
                         ),
                         TextFormField(
+                          controller: _imageController,
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.photo_size_select_actual),
+                            labelText: 'Adresse image',
+                          ),
+                          obscureText: false,
+                          autocorrect: false,
+                          autovalidate: true,
+                          validator: (_) {
+                            return !state.isImageValid
+                                ? 'Image invalide'
+                                : null;
+                          },
+                        ),
+                        TextFormField(
                           controller: _elevationController,
                           decoration: InputDecoration(
-                            labelText: 'Denivelé positif',
+                            icon: Icon(Icons.arrow_upward),
+                            labelText: 'Denivelé positif (en m)',
                           ),
                           obscureText: false,
                           autocorrect: false,
@@ -133,7 +149,7 @@ class _AddHikeFormState extends State<AddHikeForm>
                           keyboardType: TextInputType.numberWithOptions(
                               signed: false, decimal: false),
                           validator: (_) {
-                            return !state.isDescriptionValid
+                            return !state.isElevationValid
                                 ? 'Denivelé invalide'
                                 : null;
                           },
@@ -141,7 +157,8 @@ class _AddHikeFormState extends State<AddHikeForm>
                         TextFormField(
                           controller: _distanceController,
                           decoration: InputDecoration(
-                            labelText: 'Distance',
+                            icon: Icon(Icons.settings_ethernet),
+                            labelText: 'Distance (en m)',
                           ),
                           obscureText: false,
                           autocorrect: false,
@@ -149,7 +166,7 @@ class _AddHikeFormState extends State<AddHikeForm>
                           keyboardType: TextInputType.numberWithOptions(
                               signed: false, decimal: false),
                           validator: (_) {
-                            return !state.isDescriptionValid
+                            return !state.isDistanceValid
                                 ? 'Distance invalide'
                                 : null;
                           },
@@ -227,6 +244,12 @@ class _AddHikeFormState extends State<AddHikeForm>
     );
   }
 
+  void _onImageChanged() {
+    _addHikeBloc.dispatch(
+      UrlImageChanged(urlImage: _imageController.text),
+    );
+  }
+
   void _onFormSubmitted() {
     _addHikeBloc.dispatch(
       Submitted(
@@ -234,6 +257,7 @@ class _AddHikeFormState extends State<AddHikeForm>
           description: _descriptionController.text,
           date: _selectDate,
           owner: _currentUser,
+          urlImage: _imageController.text,
           elevation: int.parse(_elevationController.text),
           distance: int.parse(_distanceController.text)),
     );

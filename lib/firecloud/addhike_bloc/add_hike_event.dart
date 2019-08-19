@@ -51,6 +51,15 @@ class ElevationChanged extends AddHikeEvent {
   String toString() => 'DescriptionChanged { description: $elevation }';
 }
 
+class UrlImageChanged extends AddHikeEvent {
+  final String urlImage;
+
+  UrlImageChanged({@required this.urlImage}) : super([urlImage]);
+
+  @override
+  String toString() => 'DescriptionChanged { description: $urlImage }';
+}
+
 class Submitted extends AddHikeEvent {
   final String title;
   final String description;
@@ -58,6 +67,7 @@ class Submitted extends AddHikeEvent {
   final String owner;
   final int distance;
   final int elevation;
+  final String urlImage;
 
   Submitted(
       {@required this.title,
@@ -65,8 +75,9 @@ class Submitted extends AddHikeEvent {
       @required this.date,
       @required this.distance,
       @required this.elevation,
-      @required this.owner})
-      : super([title, description, date, distance, elevation, owner]);
+      @required this.owner,
+      @required this.urlImage})
+      : super([title, description, date, distance, elevation, owner, urlImage]);
 
   @override
   String toString() {

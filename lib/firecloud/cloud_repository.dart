@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shared_hike/db/hike.dart';
 
 class CloudRepository {
   final Firestore _firestore;
@@ -18,8 +17,7 @@ class CloudRepository {
     int distance,
     int elevation,
     String owner,
-    /*Hike hike*/
-  ) async {
+    String urlImage,) async {
     print('Add hike $title to firestore');
     try {
       await _firestore.collection('hikes').add({
@@ -30,7 +28,7 @@ class CloudRepository {
         //'numberGuest': hike.numberGuest,
         'elevation': elevation,
         'distance': distance,
-        //'image': hike.image,
+        'image': urlImage,
       });
 /*      await _firestore.collection('hikes').add({
         'title': hike.title,

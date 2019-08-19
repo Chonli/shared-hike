@@ -5,20 +5,20 @@ class AddHikeState {
   final bool isTitleValid;
   final bool isDescriptionValid;
   final bool isDateValid;
-  final bool isNumberGuestValid;
   final bool isElevationValid;
   final bool isDistanceValid;
+  final bool isImageValid;
   final bool isSubmitting;
   final bool isSuccess;
   final bool isFailure;
 
-  bool get isFormValid => isNumberGuestValid && isDateValid && isDescriptionValid && isTitleValid;
+  bool get isFormValid => isDateValid && isDescriptionValid && isTitleValid;
 
   AddHikeState({
     @required this.isTitleValid,
     @required this.isDescriptionValid,
     @required this.isDateValid,
-    @required this.isNumberGuestValid,
+    this.isImageValid,
     this.isElevationValid,
     this.isDistanceValid,
     @required this.isSubmitting,
@@ -31,7 +31,7 @@ class AddHikeState {
       isTitleValid: true,
       isDescriptionValid: true,
       isDateValid: true,
-      isNumberGuestValid: true,
+      isImageValid: true,
       isElevationValid: true,
       isDistanceValid: true,
       isSubmitting: false,
@@ -45,7 +45,7 @@ class AddHikeState {
       isTitleValid: true,
       isDescriptionValid: true,
       isDateValid: true,
-      isNumberGuestValid: true,
+      isImageValid: true,
       isElevationValid: true,
       isDistanceValid: true,
       isSubmitting: true,
@@ -59,7 +59,7 @@ class AddHikeState {
       isTitleValid: true,
       isDescriptionValid: true,
       isDateValid: true,
-      isNumberGuestValid: true,
+      isImageValid: true,
       isElevationValid: true,
       isDistanceValid: true,
       isSubmitting: false,
@@ -73,7 +73,7 @@ class AddHikeState {
       isTitleValid: true,
       isDescriptionValid: true,
       isDateValid: true,
-      isNumberGuestValid: true,
+      isImageValid: true,
       isElevationValid: true,
       isDistanceValid: true,
       isSubmitting: false,
@@ -86,7 +86,7 @@ class AddHikeState {
     bool isTitleValid,
     bool isDescriptionValid,
     bool isDateValid,
-    bool isNumberGuestValid,
+    bool isImageValid,
     bool isElevationValid,
     bool isDistanceValid,
   }) {
@@ -94,7 +94,7 @@ class AddHikeState {
       isTitleValid: isTitleValid,
       isDescriptionValid: isDescriptionValid,
       isDateValid: isDateValid,
-      isNumberGuestValid: isNumberGuestValid,
+      isImageValid: isImageValid,
       isElevationValid: isElevationValid,
       isDistanceValid: isDistanceValid,
       isSubmitting: false,
@@ -107,7 +107,7 @@ class AddHikeState {
     bool isTitleValid,
     bool isDescriptionValid,
     bool isDateValid,
-    bool isNumberGuestValid,
+    bool isImageValid,
     bool isElevationValid,
     bool isDistanceValid,
     bool isSubmitting,
@@ -118,7 +118,7 @@ class AddHikeState {
       isTitleValid: isTitleValid ?? this.isTitleValid,
       isDescriptionValid: isDescriptionValid ?? this.isDescriptionValid,
       isDateValid: isDateValid ?? this.isDateValid,
-      isNumberGuestValid: isNumberGuestValid ?? this.isNumberGuestValid,
+      isImageValid: isImageValid ?? this.isImageValid,
       isElevationValid: isElevationValid ?? this.isElevationValid,
       isDistanceValid: isDistanceValid ?? this.isDistanceValid,
       isSubmitting: isSubmitting ?? this.isSubmitting,
@@ -133,7 +133,7 @@ class AddHikeState {
       isTitleValid: $isTitleValid,
       isDescriptionValid: $isDescriptionValid,
       isDateValid: $isDateValid,
-      isNumberGuestValid: $isNumberGuestValid,
+      isImageValid: $isImageValid,
       isElevationValid: $isElevationValid,
       isDistanceValid: $isDistanceValid,
       isSubmitting: $isSubmitting,
