@@ -2,29 +2,33 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_hike/firebase_login/user_repository.dart';
-import 'package:shared_hike/firebase_login/authentication_bloc/bloc.dart';
-import 'package:shared_hike/firebase_login/my_bloc_delegate.dart';
+import 'package:shared_hike/fireauth/user_repository.dart';
+import 'package:shared_hike/fireauth/authentication_bloc/bloc.dart';
+import 'package:shared_hike/fireauth/my_bloc_delegate.dart';
+import 'package:shared_hike/firecloud/cloud_repository.dart';
 import 'package:shared_hike/ui/home_page.dart';
 import 'package:shared_hike/ui/login_page.dart';
 
 void main() {
   BlocSupervisor.delegate = MyBlocDelegate();
   final UserRepository userRepository = UserRepository();
+  final CloudRepository cloudRepository = CloudRepository();
   runApp(BlocProvider(
       builder: (context) => AuthenticationBloc(userRepository: userRepository)
         ..dispatch(AppStartedEvent()),
-      child: MyApp(userRepository: userRepository)
+      child: MyApp(userRepository: userRepository,cloudRepository: cloudRepository)
   ));
 }
 
 class MyApp extends StatelessWidget {
   final String _title = 'Shared Hike';
   final UserRepository _userRepository;
+  final CloudRepository _cloudRepository;
 
-  MyApp({Key key, @required UserRepository userRepository})
+  MyApp({Key key, @required UserRepository userRepository, @required CloudRepository cloudRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
+        _cloudRepository = cloudRepository,
         super(key: key);
 
   @override
@@ -45,7 +49,7 @@ class MyApp extends StatelessWidget {
         home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
             return state is AuthenticatedState
-                ? HomePage( user: state.displayName, title: _title)
+                ? HomePage(cloudRepository: _cloudRepository, currentUser: state.displayName, title: _title)
                 : LoginPage(userRepository: _userRepository);
           },
         ),

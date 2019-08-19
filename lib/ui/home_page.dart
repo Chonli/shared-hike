@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_hike/firebase_login/authentication_bloc/bloc.dart';
+import 'package:shared_hike/fireauth/authentication_bloc/bloc.dart';
+import 'package:shared_hike/firecloud/cloud_repository.dart';
 import 'detail_hike_page.dart';
 import 'add_hike_page.dart';
 import 'package:shared_hike/db/hike.dart';
 
 class HomePage extends StatelessWidget {
   final String title;
-  final String user;
+  final String currentUser;
+  final CloudRepository cloudRepository;
 
-  HomePage({Key key, @required this.user, this.title}) : super(key: key);
+  HomePage({Key key, @required this.cloudRepository, @required this.currentUser, this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,18 +32,25 @@ class HomePage extends StatelessWidget {
           ),
       body: Center(
         child: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection('hikes').orderBy('hikeDate').snapshots(),
+          stream: cloudRepository.getHikes(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError)
-              return new Text('Error: ${snapshot.error}');
+              return Text('Error: ${snapshot.error}');
             switch (snapshot.connectionState) {
-              case ConnectionState.waiting: return new Text('Loading...');
+              case ConnectionState.waiting: return CircularProgressIndicator();
               default:
-                return new ListView(
+                return ListView(
                   children: snapshot.data.documents.map((DocumentSnapshot document) {
-                    return new ListTile(
-                      title: new Text(document['title']),
-                      subtitle: new Text(document['description']),
+                    return ListTile(
+                      title: Text(document['title']),
+                      subtitle: Text(document['description']),
+/*                      leading: CachedNetworkImage(
+                        placeholder: (context, url) => CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        imageUrl: hike.image,
+                        cacheManager: DefaultCacheManager(),
+                        height: 55,
+                      ),*/
                       onTap: () {
                         Navigator.push(
                             context,
@@ -61,7 +70,7 @@ class HomePage extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute(builder: (context) =>
-                  AddHikePage())
+                  AddHikePage(currentUser: currentUser, cloudRepository: cloudRepository,))
           );
         },
         tooltip: 'Ajouter ',

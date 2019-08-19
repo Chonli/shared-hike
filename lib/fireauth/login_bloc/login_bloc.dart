@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:shared_hike/firebase_login/user_repository.dart';
+import 'package:shared_hike/fireauth/user_repository.dart';
 import 'package:shared_hike/util/validators.dart';
-import 'package:shared_hike/firebase_login/login_bloc/bloc.dart';
+import 'package:shared_hike/fireauth/login_bloc/bloc.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   UserRepository _userRepository;

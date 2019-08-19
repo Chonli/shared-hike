@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_hike/firebase_login/authentication_bloc/bloc.dart';
-import 'package:shared_hike/firebase_login/register_bloc/bloc.dart';
+import 'package:shared_hike/fireauth/authentication_bloc/bloc.dart';
+import 'package:shared_hike/fireauth/register_bloc/bloc.dart';
 
 class RegisterForm extends StatefulWidget {
   State<RegisterForm> createState() => _RegisterFormState();
@@ -69,7 +69,7 @@ class _RegisterFormState extends State<RegisterForm> with SingleTickerProviderSt
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Registration Failure'),
+                    Text('Erreur de creation de compte'),
                     Icon(Icons.error),
                   ],
                 ),
