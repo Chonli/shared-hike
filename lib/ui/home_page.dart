@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_hike/fireauth/authentication_bloc/bloc.dart';
 import 'package:shared_hike/firecloud/cloud_repository.dart';
-import 'detail_hike_page.dart';
+import 'package:shared_hike/ui/hike_card.dart';
 import 'add_hike_page.dart';
 import 'package:shared_hike/db/hike.dart';
 
@@ -12,7 +12,12 @@ class HomePage extends StatelessWidget {
   final String currentUser;
   final CloudRepository cloudRepository;
 
-  HomePage({Key key, @required this.cloudRepository, @required this.currentUser, this.title}) : super(key: key);
+  HomePage(
+      {Key key,
+      @required this.cloudRepository,
+      @required this.currentUser,
+      this.title})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,49 +34,35 @@ class HomePage extends StatelessWidget {
             },
           )
         ],
-          ),
-      body: Center(
-        child: StreamBuilder<QuerySnapshot>(
-          stream: cloudRepository.getHikes(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError)
-              return Text('Error: ${snapshot.error}');
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting: return CircularProgressIndicator();
-              default:
-                return ListView(
-                  children: snapshot.data.documents.map((DocumentSnapshot document) {
-                    return ListTile(
-                      title: Text(document['title']),
-                      subtitle: Text(document['description']),
-/*                      leading: CachedNetworkImage(
-                        placeholder: (context, url) => CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                        imageUrl: hike.image,
-                        cacheManager: DefaultCacheManager(),
-                        height: 55,
-                      ),*/
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                        MaterialPageRoute(builder: (context) =>
-                            DetailHikePage(Hike.fromSnapshot(document)))
-                        );
-                      },
-                    );
-                  }).toList(),
-                );
-            }
-          },
-        )
       ),
+      body: Center(
+          child: StreamBuilder<QuerySnapshot>(
+        stream: cloudRepository.getHikes(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return CircularProgressIndicator();
+            default:
+              return ListView.builder(
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (context, index) =>
+                  Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: HikeCard(Hike.fromSnapshot(snapshot.data.documents[index])),
+                ));
+          }
+        },
+      )),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) =>
-                  AddHikePage(currentUser: currentUser, cloudRepository: cloudRepository,))
-          );
+              MaterialPageRoute(
+                  builder: (context) => AddHikePage(
+                        currentUser: currentUser,
+                        cloudRepository: cloudRepository,
+                      )));
         },
         tooltip: 'Ajouter ',
         child: Icon(Icons.add),
