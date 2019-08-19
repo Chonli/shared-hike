@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_hike/firebase_login/login_bloc/login_bloc.dart';
-import 'package:shared_hike/firebase_login/user_repository.dart';
+import 'package:shared_hike/fireauth/login_bloc/login_bloc.dart';
+import 'package:shared_hike/fireauth/user_repository.dart';
 import 'login_form.dart';
 
 class LoginPage extends StatelessWidget {

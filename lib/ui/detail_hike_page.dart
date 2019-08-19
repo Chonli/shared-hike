@@ -27,7 +27,8 @@ class DetailHikePage extends StatelessWidget {
                 padding: EdgeInsets.all(8.0), child: Text(_hike.description)),
             Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Image.network(_hike.image)),
+                child: _hike.image != null ? Image.network(_hike.image): Container()
+            ),
           ],
         ));
   }
