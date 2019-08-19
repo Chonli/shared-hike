@@ -20,14 +20,14 @@ class DetailHikePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-                padding: EdgeInsets.fromLTRB(8.0,8.0,8.0,0),
+                padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                  Text(DateFormat("dd/MM/yyyy").format(_hike.hikeDate),
-                    style: TextStyle(fontStyle: FontStyle.italic)),
-                  //Todo transform owner to name Text(_hike.owner, style: TextStyle(fontStyle: FontStyle.italic)),
-                ])),
+                      Text(DateFormat("dd/MM/yyyy").format(_hike.hikeDate),
+                          style: TextStyle(fontStyle: FontStyle.italic)),
+                      //Todo transform owner to name Text(_hike.owner, style: TextStyle(fontStyle: FontStyle.italic)),
+                    ])),
             Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Row(children: [
@@ -46,13 +46,15 @@ class DetailHikePage extends StatelessWidget {
             Padding(
                 padding: EdgeInsets.all(8.0),
                 child: _hike.image != null
-                    ? CachedNetworkImage(
-                        imageUrl: _hike.image,
-                        placeholder: (context, url) =>
-                            new CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => new Container(),
-                        cacheManager: DefaultCacheManager(),
-                      )
+                    ? Hero(
+                        tag: 'poster-' + _hike.id,
+                        child: CachedNetworkImage(
+                          imageUrl: _hike.image,
+                          placeholder: (context, url) =>
+                              new CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => new Container(),
+                          cacheManager: DefaultCacheManager(),
+                        ))
                     : Container()),
           ],
         ));
