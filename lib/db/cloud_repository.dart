@@ -41,10 +41,13 @@ class CloudRepository {
     return ret;
   }
 
-/*  Future<User> getUser(String id) async {
-    var document = await _firestore.collection('users').document(id);
-    return document.get().then((value) => User.fromSnapshot(value.data) );
-  }*/
+  Future<User> getUser(String id) {
+    return _firestore.collection('users').document(id).get().then((ds) {
+      var user=  User.fromSnapshot(ds);
+      print(user.toString());
+      return user;
+    });
+  }
 
   Future<void> createUser({String id, String pseudo}) async {
     return await _firestore.collection('users').document(id).setData({

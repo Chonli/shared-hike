@@ -45,12 +45,12 @@ class HomePage extends StatelessWidget {
               return CircularProgressIndicator();
             default:
               return ListView.builder(
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) =>
-                  Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: HikeCard(cloudRepository,  Hike.fromSnapshot(snapshot.data.documents[index])),
-                ));
+                  itemCount: snapshot.data.documents.length,
+                  itemBuilder: (context, index) => Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: HikeCard(cloudRepository,
+                            Hike.fromSnapshot(snapshot.data.documents[index])),
+                      ));
           }
         },
       )),

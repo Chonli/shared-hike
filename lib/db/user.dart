@@ -11,11 +11,11 @@ class User {
 
   User.fromSnapshot(DocumentSnapshot snapshot) {
     _id = snapshot.documentID;
-    _name = snapshot['name'];
+    _name = snapshot['pseudo'];
   }
 
   @override
   String toString() {
-    return 'Submitted { id: $_id, name: $_name }';
+    return 'User { id: $_id, name: $_name }';
   }
 }
