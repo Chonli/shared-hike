@@ -1,13 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_hike/db/cloud_repository.dart';
 import 'package:shared_hike/db/hike.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shared_hike/db/user.dart';
 
 class DetailHikePage extends StatelessWidget {
   final Hike _hike;
+  final CloudRepository _cloudRepository;
 
-  DetailHikePage(this._hike);
+  DetailHikePage(this._cloudRepository, this._hike, );
+
+  Future<String> getFutureData() async =>
+      await Future.delayed(Duration(seconds: 5), () {
+        return 'Data Received';
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +35,16 @@ class DetailHikePage extends StatelessWidget {
                     children: [
                       Text(DateFormat("dd/MM/yyyy").format(_hike.hikeDate),
                           style: TextStyle(fontStyle: FontStyle.italic)),
-                      //Todo transform owner to name Text(_hike.owner, style: TextStyle(fontStyle: FontStyle.italic)),
+/*                      FutureBuilder(
+                          future: _cloudRepository.getUser(_hike.owner),
+                          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                            if (!snapshot.hasError && snapshot.connectionState != ConnectionState.waiting){
+                              print("name=" + snapshot.data['name']);
+                              //return Text(snapshot.data.name, style: TextStyle(fontStyle: FontStyle.italic));
+                            }
+                              return Container();
+
+                          }),*/
                     ])),
             Padding(
                 padding: EdgeInsets.all(8.0),
@@ -47,14 +65,14 @@ class DetailHikePage extends StatelessWidget {
                 padding: EdgeInsets.all(8.0),
                 child: _hike.image != null
                     ? Hero(
-                        tag: 'poster-' + _hike.id,
-                        child: CachedNetworkImage(
-                          imageUrl: _hike.image,
-                          placeholder: (context, url) =>
-                              new CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => new Container(),
-                          cacheManager: DefaultCacheManager(),
-                        ))
+                    tag: 'poster-' + _hike.id,
+                    child: CachedNetworkImage(
+                      imageUrl: _hike.image,
+                      placeholder: (context, url) =>
+                      new CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => new Container(),
+                      cacheManager: DefaultCacheManager(),
+                    ))
                     : Container()),
           ],
         ));

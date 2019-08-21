@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:shared_hike/db/cloud_repository.dart';
 import 'package:shared_hike/db/hike.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -7,8 +8,9 @@ import 'detail_hike_page.dart';
 
 class HikeCard extends StatelessWidget {
   final Hike _hike;
+  final CloudRepository _cloudRepository;
 
-  HikeCard(this._hike);
+  HikeCard(this._cloudRepository, this._hike);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class HikeCard extends StatelessWidget {
         Navigator.push(context,
             PageRouteBuilder(
                 transitionDuration: Duration(milliseconds: 500),
-                pageBuilder: (_, __, ___) => DetailHikePage(_hike)),
+                pageBuilder: (_, __, ___) => DetailHikePage(_cloudRepository, _hike)),
             );
       },
     ),

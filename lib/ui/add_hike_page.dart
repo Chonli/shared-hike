@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_hike/firecloud/addhike_bloc/bloc.dart';
-import 'package:shared_hike/firecloud/cloud_repository.dart';
+import 'package:shared_hike/db/cloud_repository.dart';
 import 'package:shared_hike/ui/add_hike_form.dart';
 
 class AddHikePage extends StatelessWidget {

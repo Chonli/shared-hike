@@ -24,15 +24,25 @@ class PasswordChanged extends RegisterEvent {
   String toString() => 'PasswordChanged { password: **** }';
 }
 
+class PseudoChanged extends RegisterEvent {
+  final String pseudo;
+
+  PseudoChanged({@required this.pseudo}) : super([pseudo]);
+
+  @override
+  String toString() => 'PseudoChanged { pseudo: $pseudo }';
+}
+
 class Submitted extends RegisterEvent {
   final String email;
   final String password;
+  final String pseudo;
 
-  Submitted({@required this.email, @required this.password})
-      : super([email, password]);
+  Submitted({@required this.email, @required this.password, @required this.pseudo})
+      : super([email, password, pseudo]);
 
   @override
   String toString() {
-    return 'Submitted { email: $email, password: **** }';
+    return 'Submitted { email: $email, pseudo: $pseudo }';
   }
 }

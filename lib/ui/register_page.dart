@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_hike/fireauth/register_bloc/bloc.dart';
-import 'package:shared_hike/fireauth/user_repository.dart';
+import 'package:shared_hike/db/cloud_repository.dart';
 import 'package:shared_hike/ui/register_form.dart';
 
 class RegisterPage extends StatelessWidget {
-  final UserRepository _userRepository;
+  final CloudRepository _cloudRepository;
 
-  RegisterPage({Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository,
+  RegisterPage({Key key, @required CloudRepository cloudRepository})
+      : assert(cloudRepository != null), assert(cloudRepository != null),
+        _cloudRepository = cloudRepository,
         super(key: key);
 
   @override
@@ -18,7 +18,7 @@ class RegisterPage extends StatelessWidget {
       appBar: AppBar(title: Text('Créer compte')),
       body: Center(
         child: BlocProvider<RegisterBloc>(
-          builder: (context) => RegisterBloc(userRepository: _userRepository),
+          builder: (context) => RegisterBloc(cloudRepository: _cloudRepository),
           child: RegisterForm(),
         ),
       ),

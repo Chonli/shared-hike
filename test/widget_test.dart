@@ -7,16 +7,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_hike/fireauth/user_repository.dart';
-import 'package:shared_hike/firecloud/cloud_repository.dart';
+import 'package:shared_hike/db/cloud_repository.dart';
 import 'package:shared_hike/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    final UserRepository userRepository = UserRepository();
     final CloudRepository cloudRepository = CloudRepository();
-    await tester.pumpWidget(MyApp(cloudRepository: cloudRepository, userRepository: userRepository));
+    await tester.pumpWidget(MyApp(cloudRepository: cloudRepository));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

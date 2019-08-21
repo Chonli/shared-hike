@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_hike/db/cloud_repository.dart';
 import './bloc.dart';
-import 'package:shared_hike/fireauth/user_repository.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 
-  final UserRepository _userRepository;
+  final CloudRepository _cloudRepository;
 
-  AuthenticationBloc({@required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository;
+  AuthenticationBloc({@required CloudRepository cloudRepository})
+      : assert(cloudRepository != null),
+        _cloudRepository = cloudRepository;
 
   @override
   AuthenticationState get initialState => UninitializedState();
@@ -30,10 +30,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
     try {
-      final isSignedIn = await _userRepository.isSignedIn();
+      final isSignedIn = await _cloudRepository.isSignedIn();
       if (isSignedIn) {
-        final name = await _userRepository.getUser();
-        yield AuthenticatedState(name);
+        yield AuthenticatedState(await _cloudRepository.getCurrentUserId());
       } else {
         yield UnauthenticatedState();
       }
@@ -43,11 +42,11 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   }
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
-    yield AuthenticatedState(await _userRepository.getUser());
+    yield AuthenticatedState(await _cloudRepository.getCurrentUserId());
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
     yield UnauthenticatedState();
-    _userRepository.signOut();
+    _cloudRepository.signOut();
   }
 }

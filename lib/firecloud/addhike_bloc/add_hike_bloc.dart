@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:shared_hike/firecloud/cloud_repository.dart';
+import 'package:shared_hike/db/cloud_repository.dart';
 import './bloc.dart';
 
 class AddHikeBloc extends Bloc<AddHikeEvent, AddHikeState> {
