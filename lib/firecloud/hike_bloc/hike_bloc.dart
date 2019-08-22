@@ -3,24 +3,25 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_hike/db/cloud_repository.dart';
+import 'package:shared_hike/db/hike.dart';
 import './bloc.dart';
 
-class AddHikeBloc extends Bloc<AddHikeEvent, AddHikeState> {
+class HikeBloc extends Bloc<HikeEvent, HikeState> {
   final CloudRepository _cloudRepository;
 
-  AddHikeBloc({@required CloudRepository cloudRepository})
+  HikeBloc({@required CloudRepository cloudRepository})
       : assert(cloudRepository != null),
         _cloudRepository = cloudRepository;
 
   @override
-  AddHikeState get initialState => AddHikeState.empty();
+  HikeState get initialState => HikeState.empty();
 
   @override
-  Stream<AddHikeState> transform(
-    Stream<AddHikeEvent> events,
-    Stream<AddHikeState> Function(AddHikeEvent event) next,
+  Stream<HikeState> transform(
+    Stream<HikeEvent> events,
+    Stream<HikeState> Function(HikeEvent event) next,
   ) {
-    final observableStream = events as Observable<AddHikeEvent>;
+    final observableStream = events as Observable<HikeEvent>;
     final nonDebounceStream = observableStream.where((event) {
       return (event is! TitleChanged &&
           event is! DescriptionChanged &&
@@ -41,8 +42,8 @@ class AddHikeBloc extends Bloc<AddHikeEvent, AddHikeState> {
   }
 
   @override
-  Stream<AddHikeState> mapEventToState(
-    AddHikeEvent event,
+  Stream<HikeState> mapEventToState(
+    HikeEvent event,
   ) async* {
     if (event is TitleChanged) {
       yield* _mapTitleChangedToState(event.title);
@@ -56,8 +57,8 @@ class AddHikeBloc extends Bloc<AddHikeEvent, AddHikeState> {
       yield* _mapElevationChangedToState(event.elevation);
     } else if (event is UrlImageChanged) {
       yield* _mapUrlImageChangedToState(event.urlImage);
-    } else if (event is Submitted) {
-      yield* _mapFormSubmittedToState(
+    } else if (event is CreateHike) {
+      yield* _mapFormCreateHikeToState(
         event.title,
         event.description,
         event.date,
@@ -66,47 +67,51 @@ class AddHikeBloc extends Bloc<AddHikeEvent, AddHikeState> {
         event.owner,
         event.urlImage,
       );
+    }else if (event is UpdateHike) {
+      yield* _mapFormUpdateHikeToState(
+        event.hike,
+      );
     }
   }
 
-  Stream<AddHikeState> _mapTitleChangedToState(String title) async* {
+  Stream<HikeState> _mapTitleChangedToState(String title) async* {
     yield currentState.update(
       isTitleValid: title.isNotEmpty,
     );
   }
 
-  Stream<AddHikeState> _mapDescriptionChangedToState(
+  Stream<HikeState> _mapDescriptionChangedToState(
       String description) async* {
     yield currentState.update(
       isTitleValid: description.isNotEmpty,
     );
   }
 
-  Stream<AddHikeState> _mapDateChangedToState(DateTime date) async* {
+  Stream<HikeState> _mapDateChangedToState(DateTime date) async* {
     yield currentState.update(
       isDateValid: date.isAfter(DateTime.now()),
     );
   }
 
-  Stream<AddHikeState> _mapElevationChangedToState(int elevation) async* {
+  Stream<HikeState> _mapElevationChangedToState(int elevation) async* {
     yield currentState.update(
       isElevationValid: elevation > 0,
     );
   }
 
-  Stream<AddHikeState> _mapDistanceChangedToState(int distance) async* {
+  Stream<HikeState> _mapDistanceChangedToState(int distance) async* {
     yield currentState.update(
       isDistanceValid: distance > 0,
     );
   }
 
-  Stream<AddHikeState> _mapUrlImageChangedToState(String urlImage) async* {
+  Stream<HikeState> _mapUrlImageChangedToState(String urlImage) async* {
     yield currentState.update(
       isImageValid: urlImage.isNotEmpty,
     );
   }
 
-  Stream<AddHikeState> _mapFormSubmittedToState(
+  Stream<HikeState> _mapFormCreateHikeToState(
       String title,
       String description,
       DateTime date,
@@ -114,7 +119,7 @@ class AddHikeBloc extends Bloc<AddHikeEvent, AddHikeState> {
       int elevation,
       String owner,
       String urlImage,) async* {
-    yield AddHikeState.loading();
+    yield HikeState.loading();
     try {
       await _cloudRepository.createHike(
         title,
@@ -125,9 +130,20 @@ class AddHikeBloc extends Bloc<AddHikeEvent, AddHikeState> {
         owner,
         urlImage,
       );
-      yield AddHikeState.success();
+      yield HikeState.success();
     } catch (_) {
-      yield AddHikeState.failure();
+      yield HikeState.failure();
+    }
+  }
+
+  Stream<HikeState> _mapFormUpdateHikeToState(
+      Hike hike,) async* {
+    yield HikeState.loading();
+    try {
+      await _cloudRepository.updateHike(hike);
+      yield HikeState.success();
+    } catch (_) {
+      yield HikeState.failure();
     }
   }
 }

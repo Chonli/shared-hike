@@ -1,12 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_hike/db/hike.dart';
 
 @immutable
-abstract class AddHikeEvent extends Equatable {
-  AddHikeEvent([List props = const []]) : super(props);
+abstract class HikeEvent extends Equatable {
+  HikeEvent([List props = const []]) : super(props);
 }
 
-class TitleChanged extends AddHikeEvent {
+class TitleChanged extends HikeEvent {
   final String title;
 
   TitleChanged({@required this.title}) : super([title]);
@@ -15,7 +16,7 @@ class TitleChanged extends AddHikeEvent {
   String toString() => 'TitleChanged { title :$title }';
 }
 
-class DescriptionChanged extends AddHikeEvent {
+class DescriptionChanged extends HikeEvent {
   final String description;
 
   DescriptionChanged({@required this.description}) : super([description]);
@@ -24,7 +25,7 @@ class DescriptionChanged extends AddHikeEvent {
   String toString() => 'DescriptionChanged { description: $description }';
 }
 
-class DateChanged extends AddHikeEvent {
+class DateChanged extends HikeEvent {
   final DateTime date;
 
   DateChanged({@required this.date}) : super([date]);
@@ -33,7 +34,7 @@ class DateChanged extends AddHikeEvent {
   String toString() => 'DescriptionChanged { description: $date }';
 }
 
-class DistanceChanged extends AddHikeEvent {
+class DistanceChanged extends HikeEvent {
   final int distance;
 
   DistanceChanged({@required this.distance}) : super([distance]);
@@ -42,7 +43,7 @@ class DistanceChanged extends AddHikeEvent {
   String toString() => 'DescriptionChanged { description: $distance }';
 }
 
-class ElevationChanged extends AddHikeEvent {
+class ElevationChanged extends HikeEvent {
   final int elevation;
 
   ElevationChanged({@required this.elevation}) : super([elevation]);
@@ -51,7 +52,7 @@ class ElevationChanged extends AddHikeEvent {
   String toString() => 'DescriptionChanged { description: $elevation }';
 }
 
-class UrlImageChanged extends AddHikeEvent {
+class UrlImageChanged extends HikeEvent {
   final String urlImage;
 
   UrlImageChanged({@required this.urlImage}) : super([urlImage]);
@@ -60,7 +61,7 @@ class UrlImageChanged extends AddHikeEvent {
   String toString() => 'DescriptionChanged { description: $urlImage }';
 }
 
-class Submitted extends AddHikeEvent {
+class CreateHike extends HikeEvent {
   final String title;
   final String description;
   final DateTime date;
@@ -69,7 +70,7 @@ class Submitted extends AddHikeEvent {
   final int elevation;
   final String urlImage;
 
-  Submitted(
+  CreateHike(
       {@required this.title,
       @required this.description,
       @required this.date,
@@ -81,6 +82,18 @@ class Submitted extends AddHikeEvent {
 
   @override
   String toString() {
-    return 'Submitted { title: $title, description: $description, date: $date, distance: $distance, elevation: $elevation, user: $owner}';
+    return 'CreateHike { title: $title, description: $description, date: $date, distance: $distance, elevation: $elevation, user: $owner}';
+  }
+}
+
+class UpdateHike extends HikeEvent {
+  final Hike hike;
+
+  UpdateHike({this.hike})
+      : super([hike]);
+
+  @override
+  String toString() {
+    return 'UpdateHike { title: ${hike.title}, description: ${hike.description}, date: ${hike.hikeDate}, distance: ${hike.distance}, elevation: ${hike.elevation}}';
   }
 }

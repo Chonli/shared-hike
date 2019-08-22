@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
 @immutable
-class AddHikeState {
+class HikeState {
   final bool isTitleValid;
   final bool isDescriptionValid;
   final bool isDateValid;
@@ -14,7 +14,7 @@ class AddHikeState {
 
   bool get isFormValid => isDateValid && isDescriptionValid && isTitleValid;
 
-  AddHikeState({
+  HikeState({
     @required this.isTitleValid,
     @required this.isDescriptionValid,
     @required this.isDateValid,
@@ -26,8 +26,8 @@ class AddHikeState {
     @required this.isFailure,
   });
 
-  factory AddHikeState.empty() {
-    return AddHikeState(
+  factory HikeState.empty() {
+    return HikeState(
       isTitleValid: true,
       isDescriptionValid: true,
       isDateValid: true,
@@ -40,8 +40,8 @@ class AddHikeState {
     );
   }
 
-  factory AddHikeState.loading() {
-    return AddHikeState(
+  factory HikeState.loading() {
+    return HikeState(
       isTitleValid: true,
       isDescriptionValid: true,
       isDateValid: true,
@@ -54,8 +54,8 @@ class AddHikeState {
     );
   }
 
-  factory AddHikeState.failure() {
-    return AddHikeState(
+  factory HikeState.failure() {
+    return HikeState(
       isTitleValid: true,
       isDescriptionValid: true,
       isDateValid: true,
@@ -68,8 +68,8 @@ class AddHikeState {
     );
   }
 
-  factory AddHikeState.success() {
-    return AddHikeState(
+  factory HikeState.success() {
+    return HikeState(
       isTitleValid: true,
       isDescriptionValid: true,
       isDateValid: true,
@@ -82,7 +82,7 @@ class AddHikeState {
     );
   }
 
-  AddHikeState update({
+  HikeState update({
     bool isTitleValid,
     bool isDescriptionValid,
     bool isDateValid,
@@ -103,7 +103,7 @@ class AddHikeState {
     );
   }
 
-  AddHikeState copyWith({
+  HikeState copyWith({
     bool isTitleValid,
     bool isDescriptionValid,
     bool isDateValid,
@@ -114,7 +114,7 @@ class AddHikeState {
     bool isSuccess,
     bool isFailure,
   }) {
-    return AddHikeState(
+    return HikeState(
       isTitleValid: isTitleValid ?? this.isTitleValid,
       isDescriptionValid: isDescriptionValid ?? this.isDescriptionValid,
       isDateValid: isDateValid ?? this.isDateValid,

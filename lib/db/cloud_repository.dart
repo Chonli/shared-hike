@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_hike/db/user.dart';
 
+import 'hike.dart';
+
 class CloudRepository {
   final Firestore _firestore;
   final FirebaseAuth _firebaseAuth;
@@ -12,6 +14,13 @@ class CloudRepository {
 
   Stream<QuerySnapshot> getHikes() {
     return _firestore.collection('hikes').orderBy('hikeDate').snapshots();
+  }
+
+  Future<Hike> getHike(String id) {
+    return _firestore.collection('hikes').document(id).get().then((ds) {
+      var hike=  Hike.fromSnapshot(ds);
+      return hike;
+    });
   }
 
   Future<bool> createHike(
@@ -41,10 +50,29 @@ class CloudRepository {
     return ret;
   }
 
+  Future<bool> updateHike(Hike hike,) async {
+    var ret = true;
+    try {
+      await _firestore.collection('hikes').document(hike.id).updateData({
+        'title': hike.title,
+        'description': hike.description,
+        'hikeDate': hike.hikeDate,
+        'owner': hike.owner,
+        'elevation': hike.elevation,
+        'distance': hike.distance,
+        'image': hike.image,
+      });
+    } catch (error) {
+      print(error);
+      ret = false;
+    }
+
+    return ret;
+  }
+
   Future<User> getUser(String id) {
     return _firestore.collection('users').document(id).get().then((ds) {
       var user=  User.fromSnapshot(ds);
-      print(user.toString());
       return user;
     });
   }

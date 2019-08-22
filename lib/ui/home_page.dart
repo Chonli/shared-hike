@@ -67,7 +67,6 @@ class HomePage extends StatelessWidget {
         tooltip: 'Ajouter ',
         child: Icon(Icons.add),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

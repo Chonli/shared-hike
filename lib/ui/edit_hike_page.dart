@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_hike/db/hike.dart';
 import 'package:shared_hike/firecloud/hike_bloc/bloc.dart';
 import 'package:shared_hike/db/cloud_repository.dart';
 import 'package:shared_hike/ui/hike_form.dart';
 
-class AddHikePage extends StatelessWidget {
+class EditHikePage extends StatelessWidget {
   final CloudRepository _cloudRepository;
-  final String _currentUser;
+  final Hike _hike;
 
-  AddHikePage({Key key, @required CloudRepository cloudRepository, @required String currentUser})
+  EditHikePage(
+      {Key key, @required Hike hike, @required CloudRepository cloudRepository})
       : assert(cloudRepository != null),
+        assert(hike != null),
         _cloudRepository = cloudRepository,
-        _currentUser = currentUser,
+        _hike = hike,
         super(key: key);
 
   @override
@@ -23,7 +26,7 @@ class AddHikePage extends StatelessWidget {
       body: Center(
         child: BlocProvider<HikeBloc>(
           builder: (context) => HikeBloc(cloudRepository: _cloudRepository),
-          child: HikeForm(currentUser: _currentUser),
+          child: HikeForm(hike: _hike,),
         ),
       ),
     );

@@ -8,10 +8,9 @@ class Hike {
   String _image;
   int _distance;
   int _elevation;
-  int _numberGuest;
   DateTime _hikeDate;
 
-  Hike(this._id, this._title, this._description, this._image, this._elevation, this._distance, this._hikeDate, this._numberGuest, this._owner);
+  Hike(this._id, this._title, this._description, this._image, this._elevation, this._distance, this._hikeDate, this._owner);
 
   String get id => _id;
   String get owner => _owner;
@@ -19,7 +18,6 @@ class Hike {
   String get description => _description;
   int get distance => _distance;
   int get elevation => _elevation;
-  int get numberGuest => _numberGuest;
   DateTime get hikeDate =>  _hikeDate;
   String get image => _image;
 
@@ -32,7 +30,6 @@ class Hike {
     _elevation = snapshot['elevation'];
     _hikeDate = DateTime.fromMillisecondsSinceEpoch(snapshot['hikeDate'].millisecondsSinceEpoch);
     _image = snapshot['image'];
-    _numberGuest = snapshot['numberGuest'];
   }
 
 

@@ -32,7 +32,7 @@ class HikeCard extends StatelessWidget {
         Navigator.push(context,
             PageRouteBuilder(
                 transitionDuration: Duration(milliseconds: 500),
-                pageBuilder: (_, __, ___) => DetailHikePage(_cloudRepository, _hike)),
+                pageBuilder: (_, __, ___) => DetailHikePage(_cloudRepository, _hike.id)),
             );
       },
     ),
