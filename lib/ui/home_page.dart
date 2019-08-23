@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:package_info/package_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_hike/fireauth/authentication_bloc/bloc.dart';
@@ -19,21 +19,79 @@ class HomePage extends StatelessWidget {
       this.title})
       : super(key: key);
 
+  void manageDisconnect(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Deconnexion'),
+          content: const Text('Voulez vous vous déconnecter ?'),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Annuler'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: const Text('Deconnecter'),
+              onPressed: () {
+                BlocProvider.of<AuthenticationBloc>(context)
+                    .dispatch(LoggedOutEvent());
+                Navigator.pop(context);
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  void manageAbout(BuildContext context) async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    showAboutDialog(
+        context: context,
+        applicationName: "Rando Partagé",
+        applicationVersion: "Version: " + packageInfo.version,
+        applicationIcon: Icon(Icons.landscape));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            Container(
+                height: 100,
+                child: DrawerHeader(
+                  child: Text(
+                    "Menu",
+                    style: TextStyle(color: Colors.white, fontSize: 32),
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                )),
+            ListTile(
+              title: Text('Deconnection'),
+              trailing: Icon(Icons.exit_to_app),
+              onTap: () {
+                manageDisconnect(context);
+              },
+            ),
+            ListTile(
+              title: Text('A propos...'),
+              onTap: () {
+                manageAbout(context);
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: Text(title),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: () {
-              //Handling click on the action items
-              BlocProvider.of<AuthenticationBloc>(context)
-                  .dispatch(LoggedOutEvent());
-            },
-          )
-        ],
       ),
       body: Center(
           child: StreamBuilder<List<Hike>>(

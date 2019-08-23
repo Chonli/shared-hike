@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_hike/db/hike.dart';
 import 'package:shared_hike/firecloud/hike_bloc/bloc.dart';
@@ -31,7 +30,9 @@ class _HikeFormState extends State<HikeForm>
   DateTime _selectDate;
 
   String get _currentUser => widget._currentUser;
+
   Hike get _hike => widget._hike;
+
   bool get isPopulated =>
       _titleController.text.isNotEmpty &&
       _descriptionController.text.isNotEmpty;
@@ -190,16 +191,26 @@ class _HikeFormState extends State<HikeForm>
                           },
                         ),
                         FlatButton(
-                            onPressed: () {
-                              DatePicker.showDateTimePicker(
-                                context,
-                                showTitleActions: true,
-                                onConfirm: (date) {
-                                  _onDateChanged(date);
-                                },
-                                currentTime: _selectDate,
-                                locale: LocaleType.fr,
-                              );
+                            onPressed: () async {
+                              final DateTime pickDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: _selectDate,
+                                  firstDate: DateTime(2019),
+                                  lastDate: DateTime(2100));
+                              if (pickDate != null) {
+                                final TimeOfDay pickTime = await showTimePicker(
+                                  context: context,
+                                  initialTime: TimeOfDay(hour: 8, minute: 0),
+                                );
+                                if (pickTime != null) {
+                                  _onDateChanged(DateTime(
+                                      pickDate.year,
+                                      pickDate.month,
+                                      pickDate.day,
+                                      pickTime.hour,
+                                      pickTime.minute));
+                                }
+                              }
                             },
                             child: Text(
                               'Date randonnée: ' +
