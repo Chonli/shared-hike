@@ -43,8 +43,8 @@ class _DetailHikePageState extends State<DetailHikePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-          future: _cloudRepository.getHike(_id),
+    return StreamBuilder(
+          stream: _cloudRepository.streamHike(_id),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Scaffold(

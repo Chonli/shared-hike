@@ -23,6 +23,14 @@ class CloudRepository {
     });
   }
 
+  Stream<Hike> streamHike(String id) {
+    return _firestore
+        .collection('hikes')
+        .document(id)
+        .snapshots()
+        .map((snap) => Hike.fromSnapshot(snap));
+  }
+
   Future<bool> createHike(
     String title,
     String description,
