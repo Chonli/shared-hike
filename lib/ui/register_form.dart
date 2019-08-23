@@ -10,6 +10,7 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> with SingleTickerProviderStateMixin {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _pseudoController = TextEditingController();
   AnimationController _loginButtonController;
   Animation<double> _buttonAnimation;
   RegisterBloc _registerBloc;
@@ -27,6 +28,7 @@ class _RegisterFormState extends State<RegisterForm> with SingleTickerProviderSt
     _registerBloc = BlocProvider.of<RegisterBloc>(context);
     _emailController.addListener(_onEmailChanged);
     _passwordController.addListener(_onPasswordChanged);
+    _pseudoController.addListener(_onPseudoChanged);
     _loginButtonController = AnimationController(
       vsync: this,
       duration: Duration(seconds: 1),
@@ -110,10 +112,23 @@ class _RegisterFormState extends State<RegisterForm> with SingleTickerProviderSt
                       return !state.isPasswordValid ? 'Mot de passe invalide' : null;
                     },
                   ),
+                  TextFormField(
+                    controller: _pseudoController,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.text_fields),
+                      labelText: 'Pseudo',
+                    ),
+                    obscureText: false,
+                    autocorrect: false,
+                    autovalidate: true,
+                    validator: (_) {
+                      return !state.isPseudoValid ? 'Pseudo invalide' : null;
+                    },
+                  ),
                   GestureDetector(
                     child: Container(
                         margin: EdgeInsets.all(15.0),
-                        decoration: new BoxDecoration(
+                        decoration: BoxDecoration(
                             color: isRegisterButtonEnabled(state) ? Colors.blue : Colors.grey,
                             borderRadius: BorderRadius.all(const Radius.circular(30.0))),
                         alignment: FractionalOffset.center,
@@ -125,7 +140,7 @@ class _RegisterFormState extends State<RegisterForm> with SingleTickerProviderSt
                         )
                             : CircularProgressIndicator(
                           valueColor:
-                          new AlwaysStoppedAnimation<Color>(
+                          AlwaysStoppedAnimation<Color>(
                               Colors.white),
                         )),
                     onTap: () => isRegisterButtonEnabled(state) ? _onFormSubmitted() : null,
@@ -158,11 +173,18 @@ class _RegisterFormState extends State<RegisterForm> with SingleTickerProviderSt
     );
   }
 
+  void _onPseudoChanged() {
+    _registerBloc.dispatch(
+      PseudoChanged(pseudo: _pseudoController.text),
+    );
+  }
+
   void _onFormSubmitted() {
     _registerBloc.dispatch(
       Submitted(
         email: _emailController.text,
         password: _passwordController.text,
+        pseudo: _pseudoController.text,
       ),
     );
   }

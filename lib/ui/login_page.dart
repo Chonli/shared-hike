@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_hike/fireauth/login_bloc/login_bloc.dart';
-import 'package:shared_hike/fireauth/user_repository.dart';
+import 'package:shared_hike/db/cloud_repository.dart';
 import 'login_form.dart';
 
 class LoginPage extends StatelessWidget {
-  final UserRepository _userRepository;
+  final CloudRepository _cloudRepository;
 
-  LoginPage({Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository,
+  LoginPage({Key key, @required CloudRepository cloudRepository})
+      : assert(cloudRepository != null),
+        _cloudRepository = cloudRepository,
         super(key: key);
 
 
@@ -18,8 +18,8 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Login')),
       body: BlocProvider<LoginBloc>(
-        builder: (context) => LoginBloc(userRepository: _userRepository),
-        child: LoginForm(userRepository: _userRepository),
+        builder: (context) => LoginBloc(cloudRepository: _cloudRepository),
+        child: LoginForm(cloudRepository: _cloudRepository),
       ),
     );
   }

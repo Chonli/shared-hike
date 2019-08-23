@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_hike/fireauth/user_repository.dart';
+import 'package:shared_hike/db/cloud_repository.dart';
 import 'package:shared_hike/fireauth/authentication_bloc/bloc.dart';
 import 'package:shared_hike/fireauth/login_bloc/bloc.dart';
 import 'package:shared_hike/ui/register_page.dart';
 
 class LoginForm extends StatefulWidget {
-  final UserRepository _userRepository;
+  final CloudRepository _cloudRepository;
 
-  LoginForm({Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository,
+  LoginForm({Key key, @required CloudRepository cloudRepository})
+      : assert(cloudRepository != null),
+        _cloudRepository = cloudRepository,
         super(key: key);
 
   State<LoginForm> createState() => _LoginFormState();
@@ -23,7 +23,7 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
   Animation<double> _buttonAnimation;
   LoginBloc _loginBloc;
 
-  UserRepository get _userRepository => widget._userRepository;
+  CloudRepository get _cloudRepository => widget._cloudRepository;
 
   bool get isPopulated => _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
 
@@ -156,7 +156,7 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
                               Navigator.of(context).push(
                                 MaterialPageRoute(builder: (context) {
                                   return RegisterPage(
-                                      userRepository: _userRepository);
+                                      cloudRepository: _cloudRepository);
                                 }),
                               );
                             }),

@@ -8,10 +8,10 @@ class Hike {
   String _image;
   int _distance;
   int _elevation;
-  int _numberGuest;
   DateTime _hikeDate;
+  List<String> _members;
 
-  Hike(this._id, this._title, this._description, this._image, this._elevation, this._distance, this._hikeDate, this._numberGuest, this._owner);
+  Hike(this._id, this._title, this._description, this._image, this._elevation, this._distance, this._hikeDate, this._owner);
 
   String get id => _id;
   String get owner => _owner;
@@ -19,9 +19,9 @@ class Hike {
   String get description => _description;
   int get distance => _distance;
   int get elevation => _elevation;
-  int get numberGuest => _numberGuest;
   DateTime get hikeDate =>  _hikeDate;
   String get image => _image;
+  List<String> get members => _members;
 
   Hike.fromSnapshot(DocumentSnapshot snapshot) {
     _id = snapshot.documentID;
@@ -32,7 +32,11 @@ class Hike {
     _elevation = snapshot['elevation'];
     _hikeDate = DateTime.fromMillisecondsSinceEpoch(snapshot['hikeDate'].millisecondsSinceEpoch);
     _image = snapshot['image'];
-    _numberGuest = snapshot['numberGuest'];
+    if(snapshot['members'] != null) {
+      _members = List<String>.from(snapshot['members']);
+    }else{
+      _members = [];
+    }
   }
 
 

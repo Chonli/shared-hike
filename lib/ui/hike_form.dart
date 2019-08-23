@@ -1,46 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_hike/firecloud/addhike_bloc/bloc.dart';
+import 'package:shared_hike/db/hike.dart';
+import 'package:shared_hike/firecloud/hike_bloc/bloc.dart';
 
-class AddHikeForm extends StatefulWidget {
+class HikeForm extends StatefulWidget {
   final String _currentUser;
+  final Hike _hike;
 
-  AddHikeForm({Key key, @required String currentUser})
-      : assert(currentUser != null),
-        _currentUser = currentUser,
+  HikeForm({Key key, String currentUser, Hike hike})
+      : _currentUser = currentUser,
+        _hike = hike,
         super(key: key);
 
-  State<AddHikeForm> createState() => _AddHikeFormState();
+  State<HikeForm> createState() => _HikeFormState();
 }
 
-class _AddHikeFormState extends State<AddHikeForm>
+class _HikeFormState extends State<HikeForm>
     with SingleTickerProviderStateMixin {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _distanceController = TextEditingController();
   final TextEditingController _elevationController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
-  AddHikeBloc _addHikeBloc;
-  bool isloading = false;
+  HikeBloc _hikeBloc;
+  bool _isLoading = false;
+  bool _isEdit = false;
   DateTime _selectDate;
 
   String get _currentUser => widget._currentUser;
-
+  Hike get _hike => widget._hike;
   bool get isPopulated =>
       _titleController.text.isNotEmpty &&
       _descriptionController.text.isNotEmpty;
 
-  bool isAddButtonEnabled(AddHikeState state) {
+  bool isAddButtonEnabled(HikeState state) {
     return state.isFormValid && isPopulated && !state.isSubmitting;
   }
 
   @override
   void initState() {
     super.initState();
-    _selectDate = DateTime.now();
-    _addHikeBloc = BlocProvider.of<AddHikeBloc>(context);
+    _hikeBloc = BlocProvider.of<HikeBloc>(context);
+
+    if (_hike != null) {
+      setState(() {
+        _isEdit = true;
+        _titleController.text = _hike.title;
+        _descriptionController.text = _hike.description;
+        _imageController.text = _hike.image;
+        _elevationController.text = _hike.elevation.toString();
+        _distanceController.text = _hike.distance.toString();
+        _selectDate = _hike.hikeDate;
+      });
+    } else {
+      _selectDate = DateTime.now();
+    }
+
     _titleController.addListener(_onTitleChanged);
     _descriptionController.addListener(_onDescriptionChanged);
     _distanceController.addListener(_onDistanceChanged);
@@ -50,22 +68,22 @@ class _AddHikeFormState extends State<AddHikeForm>
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AddHikeBloc, AddHikeState>(
+    return BlocListener<HikeBloc, HikeState>(
       listener: (context, state) {
         if (state.isSubmitting) {
           setState(() {
-            isloading = true;
+            _isLoading = true;
           });
         }
         if (state.isSuccess) {
           setState(() {
-            isloading = false;
+            _isLoading = false;
           });
           Navigator.of(context).pop();
         }
         if (state.isFailure) {
           setState(() {
-            isloading = false;
+            _isLoading = false;
           });
           Scaffold.of(context)
             ..hideCurrentSnackBar()
@@ -83,9 +101,9 @@ class _AddHikeFormState extends State<AddHikeForm>
             );
         }
       },
-      child: isloading
+      child: _isLoading
           ? CircularProgressIndicator()
-          : BlocBuilder<AddHikeBloc, AddHikeState>(
+          : BlocBuilder<HikeBloc, HikeState>(
               builder: (context, state) {
                 return Padding(
                   padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
@@ -157,7 +175,7 @@ class _AddHikeFormState extends State<AddHikeForm>
                         TextFormField(
                           controller: _distanceController,
                           decoration: InputDecoration(
-                            icon: Icon(Icons.settings_ethernet),
+                            icon: Icon(Icons.straighten),
                             labelText: 'Distance (en m)',
                           ),
                           obscureText: false,
@@ -173,12 +191,15 @@ class _AddHikeFormState extends State<AddHikeForm>
                         ),
                         FlatButton(
                             onPressed: () {
-                              DatePicker.showDateTimePicker(context,
-                                  showTitleActions: true, onConfirm: (date) {
-                                _onDateChanged(date);
-                              },
-                                  currentTime: DateTime.now(),
-                                  locale: LocaleType.fr);
+                              DatePicker.showDateTimePicker(
+                                context,
+                                showTitleActions: true,
+                                onConfirm: (date) {
+                                  _onDateChanged(date);
+                                },
+                                currentTime: _selectDate,
+                                locale: LocaleType.fr,
+                              );
                             },
                             child: Text(
                               'Date randonnée: ' +
@@ -186,7 +207,9 @@ class _AddHikeFormState extends State<AddHikeForm>
                                       .format(_selectDate),
                             )),
                         RaisedButton(
-                            child: Text("Ajout Rando"),
+                            child: _isEdit
+                                ? Text("Mise à jour Rando")
+                                : Text("Ajout Rando"),
                             onPressed: () => isAddButtonEnabled(state)
                                 ? _onFormSubmitted()
                                 : null,
@@ -212,13 +235,13 @@ class _AddHikeFormState extends State<AddHikeForm>
   }
 
   void _onTitleChanged() {
-    _addHikeBloc.dispatch(
+    _hikeBloc.dispatch(
       TitleChanged(title: _titleController.text),
     );
   }
 
   void _onDescriptionChanged() {
-    _addHikeBloc.dispatch(
+    _hikeBloc.dispatch(
       DescriptionChanged(description: _descriptionController.text),
     );
   }
@@ -227,39 +250,55 @@ class _AddHikeFormState extends State<AddHikeForm>
     setState(() {
       _selectDate = date;
     });
-    _addHikeBloc.dispatch(
+    _hikeBloc.dispatch(
       DateChanged(date: _selectDate),
     );
   }
 
   void _onElevationChanged() {
-    _addHikeBloc.dispatch(
+    _hikeBloc.dispatch(
       ElevationChanged(elevation: int.parse(_elevationController.text)),
     );
   }
 
   void _onDistanceChanged() {
-    _addHikeBloc.dispatch(
+    _hikeBloc.dispatch(
       DistanceChanged(distance: int.parse(_distanceController.text)),
     );
   }
 
   void _onImageChanged() {
-    _addHikeBloc.dispatch(
+    _hikeBloc.dispatch(
       UrlImageChanged(urlImage: _imageController.text),
     );
   }
 
   void _onFormSubmitted() {
-    _addHikeBloc.dispatch(
-      Submitted(
-          title: _titleController.text,
-          description: _descriptionController.text,
-          date: _selectDate,
-          owner: _currentUser,
-          urlImage: _imageController.text,
-          elevation: int.parse(_elevationController.text),
-          distance: int.parse(_distanceController.text)),
-    );
+    if (_isEdit) {
+      _hikeBloc.dispatch(
+        UpdateHikeEvent(
+          hike: Hike(
+              _hike.id,
+              _titleController.text,
+              _descriptionController.text,
+              _imageController.text,
+              int.parse(_elevationController.text),
+              int.parse(_distanceController.text),
+              _selectDate,
+              _hike.owner),
+        ),
+      );
+    } else {
+      _hikeBloc.dispatch(
+        CreateHikeEvent(
+            title: _titleController.text,
+            description: _descriptionController.text,
+            date: _selectDate,
+            owner: _currentUser,
+            urlImage: _imageController.text,
+            elevation: int.parse(_elevationController.text),
+            distance: int.parse(_distanceController.text)),
+      );
+    }
   }
 }

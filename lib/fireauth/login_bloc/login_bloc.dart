@@ -2,17 +2,17 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:shared_hike/fireauth/user_repository.dart';
+import 'package:shared_hike/db/cloud_repository.dart';
 import 'package:shared_hike/util/validators.dart';
 import 'package:shared_hike/fireauth/login_bloc/bloc.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  UserRepository _userRepository;
+  CloudRepository _cloudRepository;
 
   LoginBloc({
-    @required UserRepository userRepository,
-  })  : assert(userRepository != null),
-        _userRepository = userRepository;
+    @required CloudRepository cloudRepository,
+  })  : assert(cloudRepository != null),
+        _cloudRepository = cloudRepository;
 
   @override
   LoginState get initialState => LoginState.empty();
@@ -64,7 +64,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }) async* {
     yield LoginState.loading();
     try {
-      await _userRepository.signInWithCredentials(email, password);
+      await _cloudRepository.signInWithCredentials(email, password);
       yield LoginState.success();
     } catch (_) {
       yield LoginState.failure();
