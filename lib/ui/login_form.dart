@@ -4,6 +4,7 @@ import 'package:shared_hike/db/cloud_repository.dart';
 import 'package:shared_hike/fireauth/authentication_bloc/bloc.dart';
 import 'package:shared_hike/fireauth/login_bloc/bloc.dart';
 import 'package:shared_hike/ui/register_page.dart';
+import 'package:shared_hike/util/validators.dart';
 
 class LoginForm extends StatefulWidget {
   final CloudRepository _cloudRepository;
@@ -16,7 +17,8 @@ class LoginForm extends StatefulWidget {
   State<LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMixin {
+class _LoginFormState extends State<LoginForm>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   AnimationController _loginButtonController;
@@ -25,7 +27,8 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
 
   CloudRepository get _cloudRepository => widget._cloudRepository;
 
-  bool get isPopulated => _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+  bool get isPopulated =>
+      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
 
   bool isLoginButtonEnabled(LoginState state) {
     return state.isFormValid && isPopulated && !state.isSubmitting;
@@ -45,7 +48,8 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
     _buttonAnimation = Tween(
       begin: 220.0,
       end: 60.0,
-    ).animate(CurvedAnimation(parent: _loginButtonController, curve: Interval(0.0, 0.250)))
+    ).animate(CurvedAnimation(
+        parent: _loginButtonController, curve: Interval(0.0, 0.250)))
       ..addListener(() {
         setState(() {});
       })
@@ -56,7 +60,7 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
       });
   }
 
-  void _playAnimation() async{
+  void _playAnimation() async {
     await _loginButtonController.forward();
   }
 
@@ -131,22 +135,28 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
                           child: Container(
                               margin: EdgeInsets.all(15.0),
                               decoration: new BoxDecoration(
-                                  color: isLoginButtonEnabled(state) ? Colors.blue : Colors.grey,
-                                  borderRadius: BorderRadius.all(const Radius.circular(30.0))),
+                                  color: isLoginButtonEnabled(state)
+                                      ? Colors.blue
+                                      : Colors.grey,
+                                  borderRadius: BorderRadius.all(
+                                      const Radius.circular(30.0))),
                               alignment: FractionalOffset.center,
                               width: _buttonAnimation.value,
                               height: 50,
                               child: _buttonAnimation.value > 200
                                   ? Text(
                                       'Connexion',
-                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
                                     )
                                   : CircularProgressIndicator(
                                       valueColor:
                                           new AlwaysStoppedAnimation<Color>(
                                               Colors.white),
                                     )),
-                          onTap: () => isLoginButtonEnabled(state) ? _onFormSubmitted() : null,
+                          onTap: () => isLoginButtonEnabled(state)
+                              ? _onFormSubmitted()
+                              : null,
                         ),
                         FlatButton(
                             child: Text(
@@ -160,6 +170,13 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
                                 }),
                               );
                             }),
+                        FlatButton(
+                            child: Text(
+                              'Mot de passe oublié ?',
+                            ),
+                            onPressed: () {
+                              manageForgotPassword(context);
+                            }),
                       ],
                     ),
                   ),
@@ -169,6 +186,52 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
           );
         },
       ),
+    );
+  }
+
+  void manageForgotPassword(context) {
+    TextEditingController emailFieldController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Mot de passe oublié ?'),
+          content: Column(children: <Widget>[
+            const Text(
+                'Entrez votre adresse email ci-dessous et nous vous enverrons un lien pour réinitialiser votre mot de passe: '),
+            TextFormField(
+              controller: emailFieldController,
+              decoration: InputDecoration(
+                icon: Icon(Icons.email),
+                labelText: 'Email',
+              ),
+              autovalidate: true,
+              autocorrect: false,
+              validator: (value) {
+                return !Validators.isValidEmail(value)
+                    ? 'Email invalide'
+                    : null;
+              },
+            ),
+          ]),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Annuler'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: const Text('Envoyer'),
+              onPressed: () {
+                _cloudRepository.sendPasswordResetEmail(
+                    email: emailFieldController.text);
+                Navigator.pop(context);
+              },
+            )
+          ],
+        );
+      },
     );
   }
 

@@ -168,4 +168,8 @@ class CloudRepository {
   Future<String> getCurrentUserId() async {
     return (await _firebaseAuth.currentUser()).uid;
   }
+
+  Future<void> sendPasswordResetEmail({@required String email}) async {
+    return await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
 }

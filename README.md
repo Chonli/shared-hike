@@ -3,7 +3,7 @@
 Flutter application to manage shared hike with other people
 
 ## TODO
-- Manage reset password
+- Add dispose to release resource
 - Add search image page
 - Display gpx on map
 - Add signin with google account
