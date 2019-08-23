@@ -10,7 +10,7 @@ class CloudRepository {
 
   CloudRepository({FirebaseAuth firebaseAuth, Firestore firestore})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-       _firestore = firestore ?? Firestore.instance;
+        _firestore = firestore ?? Firestore.instance;
 
   Stream<QuerySnapshot> getHikes() {
     return _firestore.collection('hikes').orderBy('hikeDate').snapshots();
@@ -18,7 +18,7 @@ class CloudRepository {
 
   Future<Hike> getHike(String id) {
     return _firestore.collection('hikes').document(id).get().then((ds) {
-      var hike=  Hike.fromSnapshot(ds);
+      var hike = Hike.fromSnapshot(ds);
       return hike;
     });
   }
@@ -30,7 +30,8 @@ class CloudRepository {
     int distance,
     int elevation,
     String owner,
-    String urlImage,) async {
+    String urlImage,
+  ) async {
     var ret = true;
     try {
       await _firestore.collection('hikes').add({
@@ -50,7 +51,9 @@ class CloudRepository {
     return ret;
   }
 
-  Future<bool> updateHike(Hike hike,) async {
+  Future<bool> updateHike(
+    Hike hike,
+  ) async {
     var ret = true;
     try {
       await _firestore.collection('hikes').document(hike.id).updateData({
@@ -70,9 +73,41 @@ class CloudRepository {
     return ret;
   }
 
+  Future<bool> updateMember(String hikeId, String memberId) {
+    DocumentReference hikeReference = _firestore.collection('hikes').document(hikeId);
+
+    return _firestore.runTransaction((Transaction tx) async {
+      DocumentSnapshot postSnapshot = await tx.get(hikeReference);
+      if(postSnapshot.exists) {
+        if (postSnapshot.data['members'] != null) {
+          if (!postSnapshot.data['members'].contains(memberId)) {
+            await tx.update(hikeReference, <String, dynamic>{
+              'members': FieldValue.arrayUnion([memberId])
+            });
+          } else {
+            await tx.update(hikeReference, <String, dynamic>{
+              'members': FieldValue.arrayRemove([memberId])
+            });
+          }
+        } else {
+          await tx.update(hikeReference, {
+            'members': [memberId]
+          });
+        }
+      }else{
+        throw Exception("Hike not exist");
+      }
+    }).then((result) {
+      return true;
+    }).catchError((error) {
+      print('Error: $error');
+      return false;
+    });
+  }
+
   Future<User> getUser(String id) {
     return _firestore.collection('users').document(id).get().then((ds) {
-      var user=  User.fromSnapshot(ds);
+      var user = User.fromSnapshot(ds);
       return user;
     });
   }

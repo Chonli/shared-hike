@@ -129,7 +129,7 @@ class HikeState {
 
   @override
   String toString() {
-    return '''RegisterState {
+    return '''HikeState {
       isTitleValid: $isTitleValid,
       isDescriptionValid: $isDescriptionValid,
       isDateValid: $isDateValid,

@@ -61,7 +61,7 @@ class UrlImageChanged extends HikeEvent {
   String toString() => 'DescriptionChanged { description: $urlImage }';
 }
 
-class CreateHike extends HikeEvent {
+class CreateHikeEvent extends HikeEvent {
   final String title;
   final String description;
   final DateTime date;
@@ -70,7 +70,7 @@ class CreateHike extends HikeEvent {
   final int elevation;
   final String urlImage;
 
-  CreateHike(
+  CreateHikeEvent(
       {@required this.title,
       @required this.description,
       @required this.date,
@@ -82,18 +82,28 @@ class CreateHike extends HikeEvent {
 
   @override
   String toString() {
-    return 'CreateHike { title: $title, description: $description, date: $date, distance: $distance, elevation: $elevation, user: $owner}';
+    return 'CreateHikeEvent { title: $title, description: $description, date: $date, distance: $distance, elevation: $elevation, user: $owner}';
   }
 }
 
-class UpdateHike extends HikeEvent {
+class UpdateHikeEvent extends HikeEvent {
   final Hike hike;
 
-  UpdateHike({this.hike})
-      : super([hike]);
+  UpdateHikeEvent({@required this.hike}) : super([hike]);
 
   @override
   String toString() {
-    return 'UpdateHike { title: ${hike.title}, description: ${hike.description}, date: ${hike.hikeDate}, distance: ${hike.distance}, elevation: ${hike.elevation}}';
+    return 'UpdateHikeEvent { title: ${hike.title}, description: ${hike.description}, date: ${hike.hikeDate}, distance: ${hike.distance}, elevation: ${hike.elevation}}';
   }
+}
+
+class MembersUpdateEvent extends HikeEvent {
+  final String memberId;
+  final String hikeId;
+
+  MembersUpdateEvent({@required this.hikeId, @required this.memberId})
+      : super([hikeId, memberId]);
+
+  @override
+  String toString() => 'MembersUpdateEvent { hike: $hikeId, member: $memberId }';
 }

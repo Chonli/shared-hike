@@ -45,6 +45,7 @@ class HikeBloc extends Bloc<HikeEvent, HikeState> {
   Stream<HikeState> mapEventToState(
     HikeEvent event,
   ) async* {
+    print("mapEventToState: " + event.toString());
     if (event is TitleChanged) {
       yield* _mapTitleChangedToState(event.title);
     } else if (event is DescriptionChanged) {
@@ -57,7 +58,7 @@ class HikeBloc extends Bloc<HikeEvent, HikeState> {
       yield* _mapElevationChangedToState(event.elevation);
     } else if (event is UrlImageChanged) {
       yield* _mapUrlImageChangedToState(event.urlImage);
-    } else if (event is CreateHike) {
+    } else if (event is CreateHikeEvent) {
       yield* _mapFormCreateHikeToState(
         event.title,
         event.description,
@@ -67,10 +68,10 @@ class HikeBloc extends Bloc<HikeEvent, HikeState> {
         event.owner,
         event.urlImage,
       );
-    }else if (event is UpdateHike) {
-      yield* _mapFormUpdateHikeToState(
-        event.hike,
-      );
+    } else if (event is UpdateHikeEvent) {
+      yield* _mapFormUpdateHikeToState(event.hike);
+    } else if (event is MembersUpdateEvent) {
+      yield* _mapMembersUpdateToState(event.hikeId, event.memberId);
     }
   }
 
@@ -80,8 +81,7 @@ class HikeBloc extends Bloc<HikeEvent, HikeState> {
     );
   }
 
-  Stream<HikeState> _mapDescriptionChangedToState(
-      String description) async* {
+  Stream<HikeState> _mapDescriptionChangedToState(String description) async* {
     yield currentState.update(
       isTitleValid: description.isNotEmpty,
     );
@@ -112,13 +112,14 @@ class HikeBloc extends Bloc<HikeEvent, HikeState> {
   }
 
   Stream<HikeState> _mapFormCreateHikeToState(
-      String title,
-      String description,
-      DateTime date,
-      int distance,
-      int elevation,
-      String owner,
-      String urlImage,) async* {
+    String title,
+    String description,
+    DateTime date,
+    int distance,
+    int elevation,
+    String owner,
+    String urlImage,
+  ) async* {
     yield HikeState.loading();
     try {
       await _cloudRepository.createHike(
@@ -137,11 +138,27 @@ class HikeBloc extends Bloc<HikeEvent, HikeState> {
   }
 
   Stream<HikeState> _mapFormUpdateHikeToState(
-      Hike hike,) async* {
+    Hike hike,
+  ) async* {
     yield HikeState.loading();
     try {
       await _cloudRepository.updateHike(hike);
       yield HikeState.success();
+    } catch (_) {
+      yield HikeState.failure();
+    }
+  }
+
+  Stream<HikeState> _mapMembersUpdateToState(
+      String hikeId, String memberId) async* {
+    yield HikeState.loading();
+    try {
+      var ret = await _cloudRepository.updateMember(hikeId, memberId);
+      if(ret) {
+        yield HikeState.success();
+      }else{
+        yield HikeState.failure();
+      }
     } catch (_) {
       yield HikeState.failure();
     }

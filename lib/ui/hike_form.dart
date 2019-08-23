@@ -31,12 +31,10 @@ class _HikeFormState extends State<HikeForm>
   DateTime _selectDate;
 
   String get _currentUser => widget._currentUser;
-
   Hike get _hike => widget._hike;
-
   bool get isPopulated =>
       _titleController.text.isNotEmpty &&
-          _descriptionController.text.isNotEmpty;
+      _descriptionController.text.isNotEmpty;
 
   bool isAddButtonEnabled(HikeState state) {
     return state.isFormValid && isPopulated && !state.isSubmitting;
@@ -57,7 +55,7 @@ class _HikeFormState extends State<HikeForm>
         _distanceController.text = _hike.distance.toString();
         _selectDate = _hike.hikeDate;
       });
-    }else {
+    } else {
       _selectDate = DateTime.now();
     }
 
@@ -106,123 +104,126 @@ class _HikeFormState extends State<HikeForm>
       child: _isLoading
           ? CircularProgressIndicator()
           : BlocBuilder<HikeBloc, HikeState>(
-        builder: (context, state) {
-          return Padding(
-            padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-            child: Form(
-              child: ListView(
-                children: <Widget>[
-                  TextFormField(
-                    controller: _titleController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.title),
-                      labelText: 'Titre de la randonnée',
-                    ),
-                    autocorrect: true,
-                    autovalidate: true,
-                    validator: (_) {
-                      return !state.isTitleValid
-                          ? 'Titre invalide'
-                          : null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _descriptionController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.description),
-                      labelText: 'Description',
-                    ),
-                    obscureText: false,
-                    autocorrect: true,
-                    autovalidate: true,
-                    maxLines: 5,
-                    validator: (_) {
-                      return !state.isDescriptionValid
-                          ? 'Description invalide'
-                          : null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _imageController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.photo_size_select_actual),
-                      labelText: 'Adresse image',
-                    ),
-                    obscureText: false,
-                    autocorrect: false,
-                    autovalidate: true,
-                    validator: (_) {
-                      return !state.isImageValid
-                          ? 'Image invalide'
-                          : null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _elevationController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.arrow_upward),
-                      labelText: 'Denivelé positif (en m)',
-                    ),
-                    obscureText: false,
-                    autocorrect: false,
-                    autovalidate: true,
-                    keyboardType: TextInputType.numberWithOptions(
-                        signed: false, decimal: false),
-                    validator: (_) {
-                      return !state.isElevationValid
-                          ? 'Denivelé invalide'
-                          : null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _distanceController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.straighten),
-                      labelText: 'Distance (en m)',
-                    ),
-                    obscureText: false,
-                    autocorrect: false,
-                    autovalidate: true,
-                    keyboardType: TextInputType.numberWithOptions(
-                        signed: false, decimal: false),
-                    validator: (_) {
-                      return !state.isDistanceValid
-                          ? 'Distance invalide'
-                          : null;
-                    },
-                  ),
-                  FlatButton(
-                      onPressed: () {
-                        DatePicker.showDateTimePicker(context,
-                            showTitleActions: true, onConfirm: (date) {
-                              _onDateChanged(date);
+              builder: (context, state) {
+                return Padding(
+                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                  child: Form(
+                    child: ListView(
+                      children: <Widget>[
+                        TextFormField(
+                          controller: _titleController,
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.title),
+                            labelText: 'Titre de la randonnée',
+                          ),
+                          autocorrect: true,
+                          autovalidate: true,
+                          validator: (_) {
+                            return !state.isTitleValid
+                                ? 'Titre invalide'
+                                : null;
+                          },
+                        ),
+                        TextFormField(
+                          controller: _descriptionController,
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.description),
+                            labelText: 'Description',
+                          ),
+                          obscureText: false,
+                          autocorrect: true,
+                          autovalidate: true,
+                          maxLines: 5,
+                          validator: (_) {
+                            return !state.isDescriptionValid
+                                ? 'Description invalide'
+                                : null;
+                          },
+                        ),
+                        TextFormField(
+                          controller: _imageController,
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.photo_size_select_actual),
+                            labelText: 'Adresse image',
+                          ),
+                          obscureText: false,
+                          autocorrect: false,
+                          autovalidate: true,
+                          validator: (_) {
+                            return !state.isImageValid
+                                ? 'Image invalide'
+                                : null;
+                          },
+                        ),
+                        TextFormField(
+                          controller: _elevationController,
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.arrow_upward),
+                            labelText: 'Denivelé positif (en m)',
+                          ),
+                          obscureText: false,
+                          autocorrect: false,
+                          autovalidate: true,
+                          keyboardType: TextInputType.numberWithOptions(
+                              signed: false, decimal: false),
+                          validator: (_) {
+                            return !state.isElevationValid
+                                ? 'Denivelé invalide'
+                                : null;
+                          },
+                        ),
+                        TextFormField(
+                          controller: _distanceController,
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.straighten),
+                            labelText: 'Distance (en m)',
+                          ),
+                          obscureText: false,
+                          autocorrect: false,
+                          autovalidate: true,
+                          keyboardType: TextInputType.numberWithOptions(
+                              signed: false, decimal: false),
+                          validator: (_) {
+                            return !state.isDistanceValid
+                                ? 'Distance invalide'
+                                : null;
+                          },
+                        ),
+                        FlatButton(
+                            onPressed: () {
+                              DatePicker.showDateTimePicker(
+                                context,
+                                showTitleActions: true,
+                                onConfirm: (date) {
+                                  _onDateChanged(date);
+                                },
+                                currentTime: _selectDate,
+                                locale: LocaleType.fr,
+                              );
                             },
-                            currentTime: _selectDate,
-                            locale: LocaleType.fr);
-                      },
-                      child: Text(
-                        'Date randonnée: ' +
-                            DateFormat('dd-MM-yyyy – kk:mm')
-                                .format(_selectDate),
-                      )),
-                  RaisedButton(
-                      child: _isEdit ? Text("Mise à jour Rando") : Text(
-                          "Ajout Rando"),
-                      onPressed: () =>
-                      isAddButtonEnabled(state)
-                          ? _onFormSubmitted()
-                          : null,
-                      color: isAddButtonEnabled(state)
-                          ? Colors.blue
-                          : Colors.grey,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(30.0)))
-                ],
-              ),
+                            child: Text(
+                              'Date randonnée: ' +
+                                  DateFormat('dd-MM-yyyy – kk:mm')
+                                      .format(_selectDate),
+                            )),
+                        RaisedButton(
+                            child: _isEdit
+                                ? Text("Mise à jour Rando")
+                                : Text("Ajout Rando"),
+                            onPressed: () => isAddButtonEnabled(state)
+                                ? _onFormSubmitted()
+                                : null,
+                            color: isAddButtonEnabled(state)
+                                ? Colors.blue
+                                : Colors.grey,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0)))
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 
@@ -275,21 +276,21 @@ class _HikeFormState extends State<HikeForm>
   void _onFormSubmitted() {
     if (_isEdit) {
       _hikeBloc.dispatch(
-          UpdateHike(
-              hike: Hike(
-                  _hike.id,
-                  _titleController.text,
-                  _descriptionController.text,
-                  _imageController.text,
-                  int.parse(_elevationController.text),
-                  int.parse(_distanceController.text),
-                  _selectDate,
-                  _hike.owner),
-          ),
+        UpdateHikeEvent(
+          hike: Hike(
+              _hike.id,
+              _titleController.text,
+              _descriptionController.text,
+              _imageController.text,
+              int.parse(_elevationController.text),
+              int.parse(_distanceController.text),
+              _selectDate,
+              _hike.owner),
+        ),
       );
     } else {
       _hikeBloc.dispatch(
-        CreateHike(
+        CreateHikeEvent(
             title: _titleController.text,
             description: _descriptionController.text,
             date: _selectDate,
