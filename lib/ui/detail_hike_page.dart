@@ -72,9 +72,9 @@ class _DetailHikePageState extends State<DetailHikePage> {
                                         .format(hike.hikeDate),
                                     style:
                                         TextStyle(fontStyle: FontStyle.italic)),
-                                FutureBuilder(
-                                    future:
-                                        _cloudRepository.getUser(hike.owner),
+                                StreamBuilder(
+                                    stream:
+                                        _cloudRepository.streamUser(hike.owner),
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
                                         return Container();

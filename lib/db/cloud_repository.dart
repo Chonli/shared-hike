@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_hike/db/user.dart';
 
 import 'hike.dart';
@@ -12,8 +13,11 @@ class CloudRepository {
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _firestore = firestore ?? Firestore.instance;
 
-  Stream<QuerySnapshot> getHikes() {
-    return _firestore.collection('hikes').orderBy('hikeDate').snapshots();
+  //Hike method
+  Stream<List<Hike>> getHikes() {
+    return _firestore.collection('hikes').orderBy('hikeDate').snapshots().map(
+        (list) =>
+            list.documents.map((ds) => Hike.fromSnapshot(ds)).toList());
   }
 
   Future<Hike> getHike(String id) {
@@ -82,11 +86,12 @@ class CloudRepository {
   }
 
   Future<bool> updateMember(String hikeId, String memberId) {
-    DocumentReference hikeReference = _firestore.collection('hikes').document(hikeId);
+    DocumentReference hikeReference =
+        _firestore.collection('hikes').document(hikeId);
 
     return _firestore.runTransaction((Transaction tx) async {
       DocumentSnapshot postSnapshot = await tx.get(hikeReference);
-      if(postSnapshot.exists) {
+      if (postSnapshot.exists) {
         if (postSnapshot.data['members'] != null) {
           if (!postSnapshot.data['members'].contains(memberId)) {
             await tx.update(hikeReference, <String, dynamic>{
@@ -102,7 +107,7 @@ class CloudRepository {
             'members': [memberId]
           });
         }
-      }else{
+      } else {
         throw Exception("Hike not exist");
       }
     }).then((result) {
@@ -113,11 +118,21 @@ class CloudRepository {
     });
   }
 
+  //User method
   Future<User> getUser(String id) {
-    return _firestore.collection('users').document(id).get().then((ds) {
-      var user = User.fromSnapshot(ds);
-      return user;
-    });
+    return _firestore
+        .collection('users')
+        .document(id)
+        .get()
+        .then((ds) => User.fromSnapshot(ds));
+  }
+
+  Stream<User> streamUser(String id) {
+    return _firestore
+        .collection('users')
+        .document(id)
+        .snapshots()
+        .map((snap) => User.fromSnapshot(snap));
   }
 
   Future<void> createUser({String id, String pseudo}) async {
@@ -126,6 +141,7 @@ class CloudRepository {
     });
   }
 
+  //Authentification method
   Future<void> signInWithCredentials(String email, String password) {
     return _firebaseAuth.signInWithEmailAndPassword(
       email: email,

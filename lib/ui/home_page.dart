@@ -36,20 +36,19 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Center(
-          child: StreamBuilder<QuerySnapshot>(
+          child: StreamBuilder<List<Hike>>(
         stream: cloudRepository.getHikes(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        builder: (context, snapshot) {
           if (snapshot.hasError) return Text('Error: ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return CircularProgressIndicator();
             default:
               return ListView.builder(
-                  itemCount: snapshot.data.documents.length,
+                  itemCount: snapshot.data.length,
                   itemBuilder: (context, index) => Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: HikeCard(cloudRepository,
-                            Hike.fromSnapshot(snapshot.data.documents[index])),
+                        child: HikeCard(cloudRepository, snapshot.data[index]),
                       ));
           }
         },
