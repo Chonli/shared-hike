@@ -228,7 +228,7 @@ class _HikeFormState extends State<HikeForm>
                                 ? Colors.blue
                                 : Colors.grey,
                             shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(30.0)))
+                                borderRadius: BorderRadius.circular(30.0)))
                       ],
                     ),
                   ),

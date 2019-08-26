@@ -110,9 +110,8 @@ class _DetailHikePageState extends State<DetailHikePage> {
                             child: CachedNetworkImage(
                               imageUrl: hike.image,
                               placeholder: (context, url) =>
-                                  new CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  new Container(),
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) => Container(),
                               cacheManager: DefaultCacheManager(),
                             ))
                         : Container()),

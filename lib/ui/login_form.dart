@@ -134,7 +134,7 @@ class _LoginFormState extends State<LoginForm>
                         GestureDetector(
                           child: Container(
                               margin: EdgeInsets.all(15.0),
-                              decoration: new BoxDecoration(
+                              decoration: BoxDecoration(
                                   color: isLoginButtonEnabled(state)
                                       ? Colors.blue
                                       : Colors.grey,
@@ -150,9 +150,8 @@ class _LoginFormState extends State<LoginForm>
                                           color: Colors.white, fontSize: 20),
                                     )
                                   : CircularProgressIndicator(
-                                      valueColor:
-                                          new AlwaysStoppedAnimation<Color>(
-                                              Colors.white),
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
                                     )),
                           onTap: () => isLoginButtonEnabled(state)
                               ? _onFormSubmitted()
