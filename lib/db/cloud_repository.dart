@@ -15,8 +15,44 @@ class CloudRepository {
 
   //Hike method
   Stream<List<Hike>> getHikes() {
-    return _firestore.collection('hikes').orderBy('hikeDate').snapshots().map(
-        (list) =>
+    return _firestore
+        .collection('hikes')
+        .orderBy('hikeDate')
+        .where("hikeDate", isGreaterThanOrEqualTo: DateTime.now())
+        .snapshots()
+        .map((list) =>
+            list.documents.map((ds) => Hike.fromSnapshot(ds)).toList());
+  }
+
+  Stream<List<Hike>> getMyHikes(String userId) {
+    return _firestore
+        .collection('hikes')
+        .orderBy('hikeDate')
+        .where("hikeDate", isGreaterThanOrEqualTo: DateTime.now())
+        .where("owner", isEqualTo: userId)
+        .snapshots()
+        .map((list) =>
+            list.documents.map((ds) => Hike.fromSnapshot(ds)).toList());
+  }
+
+  Stream<List<Hike>> getRegisterHikes(String userId) {
+    return _firestore
+        .collection('hikes')
+        .orderBy('hikeDate')
+        .where("hikeDate", isGreaterThanOrEqualTo: DateTime.now())
+        .where("members", arrayContains: userId)
+        .snapshots()
+        .map((list) =>
+            list.documents.map((ds) => Hike.fromSnapshot(ds)).toList());
+  }
+
+  Stream<List<Hike>> getOldHikes() {
+    return _firestore
+        .collection('hikes')
+        .orderBy('hikeDate')
+        .where("hikeDate", isLessThan: DateTime.now())
+        .snapshots()
+        .map((list) =>
             list.documents.map((ds) => Hike.fromSnapshot(ds)).toList());
   }
 

@@ -44,91 +44,85 @@ class _DetailHikePageState extends State<DetailHikePage> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-          stream: _cloudRepository.streamHike(_id),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Scaffold(
-                  appBar: AppBar(
-                    title: Text('Chargement...'),
-                  ),
-                  body: Center(child: CircularProgressIndicator()));
-            } else {
-              var hike = snapshot.data;
-              return Scaffold(
-                  appBar: AppBar(
-                    title: Text(hike.title),
-                  ),
-                  body: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                          padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                    DateFormat("dd/MM/yyyy")
-                                        .format(hike.hikeDate),
-                                    style:
-                                        TextStyle(fontStyle: FontStyle.italic)),
-                                StreamBuilder(
-                                    stream:
-                                        _cloudRepository.streamUser(hike.owner),
-                                    builder: (context, snapshot) {
-                                      if (!snapshot.hasData) {
-                                        return Container();
-                                      } else {
-                                        return Text(snapshot.data.name,
-                                            style: TextStyle(
-                                                fontStyle: FontStyle.italic));
-                                      }
-                                    }),
-                              ])),
-                      Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                    "Distance: " +
-                                        (hike.distance / 1000.0).toString() +
-                                        "km",
-                                    style:
-                                        TextStyle(fontStyle: FontStyle.italic)),
-                                Text("D+: " + hike.elevation.toString() + "m",
-                                    style:
-                                        TextStyle(fontStyle: FontStyle.italic)),
-                                Row(// Replace with a Row for horizontal icon + text
-                                    children: <Widget>[
-                                  Text(hike.members.length.toString() + " "),
-                                  Icon(Icons.group),
-                                ]),
-                              ])),
-                      Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(hike.description)),
-                      Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: hike.image != null
-                              ? Hero(
-                                  tag: 'poster-' + hike.id,
-                                  child: CachedNetworkImage(
-                                    imageUrl: hike.image,
-                                    placeholder: (context, url) =>
-                                        new CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) =>
-                                        new Container(),
-                                    cacheManager: DefaultCacheManager(),
-                                  ))
-                              : Container()),
-                    ],
-                  ),
-                  floatingActionButton: getFloatingButton(hike),
-                  );
-            }
-          },
-        );
+      stream: _cloudRepository.streamHike(_id),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Scaffold(
+              appBar: AppBar(
+                title: Text('Chargement...'),
+              ),
+              body: Center(child: CircularProgressIndicator()));
+        } else {
+          var hike = snapshot.data;
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(hike.title),
+            ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                    padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(DateFormat("dd/MM/yyyy").format(hike.hikeDate),
+                              style: TextStyle(fontStyle: FontStyle.italic)),
+                          StreamBuilder(
+                              stream: _cloudRepository.streamUser(hike.owner),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Container();
+                                } else {
+                                  return Text(snapshot.data.name,
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic));
+                                }
+                              }),
+                        ])),
+                Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                              "Distance: " +
+                                  (hike.distance / 1000.0).toString() +
+                                  "km",
+                              style: TextStyle(fontStyle: FontStyle.italic)),
+                          Text("D+: " + hike.elevation.toString() + "m",
+                              style: TextStyle(fontStyle: FontStyle.italic)),
+                          Row(// Replace with a Row for horizontal icon + text
+                              children: <Widget>[
+                            Text(hike.members.length.toString() + " "),
+                            Icon(Icons.group),
+                          ]),
+                        ])),
+                Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(hike.description)),
+                Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: hike.image != null
+                        ? Hero(
+                            tag: 'poster-' + hike.id,
+                            child: CachedNetworkImage(
+                              imageUrl: hike.image,
+                              placeholder: (context, url) =>
+                                  new CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  new Container(),
+                              cacheManager: DefaultCacheManager(),
+                            ))
+                        : Container()),
+              ],
+            ),
+            floatingActionButton: getFloatingButton(hike),
+          );
+        }
+      },
+    );
   }
 
   Widget getFloatingButton(Hike hike) {
@@ -145,15 +139,18 @@ class _DetailHikePageState extends State<DetailHikePage> {
             },
             tooltip: 'Modifier',
             child: Icon(Icons.edit))
-        : FloatingActionButton(
-            onPressed: () {
-              _hikeBloc.dispatch(
-                  MembersUpdateEvent(hikeId: hike.id, memberId: _currentId));
-            },
-            tooltip:
-                hike.members.contains(_currentId) ? 'Quitter' : 'Participer',
-            child: hike.members.contains(_currentId)
-                ? Icon(Icons.clear)
-                : Icon(Icons.group_add));
+        : hike.hikeDate.isAfter(DateTime.now())
+            ? FloatingActionButton(
+                onPressed: () {
+                  _hikeBloc.dispatch(MembersUpdateEvent(
+                      hikeId: hike.id, memberId: _currentId));
+                },
+                tooltip: hike.members.contains(_currentId)
+                    ? 'Quitter'
+                    : 'Participer',
+                child: hike.members.contains(_currentId)
+                    ? Icon(Icons.clear)
+                    : Icon(Icons.group_add))
+            : null;
   }
 }

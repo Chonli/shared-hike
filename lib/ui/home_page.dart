@@ -7,7 +7,7 @@ import 'package:shared_hike/ui/hike_card.dart';
 import 'add_hike_page.dart';
 import 'package:shared_hike/db/hike.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final String title;
   final String currentUser;
   final CloudRepository cloudRepository;
@@ -18,6 +18,28 @@ class HomePage extends StatelessWidget {
       @required this.currentUser,
       this.title})
       : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
+
+  final List<Tab> myTabs = <Tab>[
+    Tab(text: 'Toute'),
+    Tab(text: 'Mes Rando'),
+    Tab(text: 'Enregistrées'),
+    Tab(text: 'Archivées'),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _tabController = TabController(vsync: this, initialIndex: 0, length: myTabs.length);
+  }
 
   void manageDisconnect(BuildContext context) {
     showDialog(
@@ -90,40 +112,145 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      appBar: AppBar(
+/*      appBar: AppBar(
         title: Text(title),
-      ),
-      body: Center(
-          child: StreamBuilder<List<Hike>>(
-        stream: cloudRepository.getHikes(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return CircularProgressIndicator();
-            default:
-              return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) => Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: HikeCard(cloudRepository, snapshot.data[index]),
-                      ));
-          }
-        },
-      )),
+      ),*/
+      body: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                expandedHeight: 200.0,
+                floating: false,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                    centerTitle: true,
+                    title: Text(widget.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                        )),
+                    background: Image.asset(
+                      "assets/images/tab_background.jpeg",
+                      fit: BoxFit.cover,
+                    )),
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  TabBar(
+                    controller: _tabController,
+                    indicatorColor: Colors.blue,
+                    labelColor: Colors.black87,
+                    unselectedLabelColor: Colors.grey,
+                    isScrollable: true,
+                    tabs: myTabs,
+                  ),
+                ]),
+              ),
+            ];
+          },
+          body: TabBarView(controller: _tabController, children: [
+            _listAllHikes(),
+            _listMyHikes(),
+            _listRegisterHikes(),
+            _listOldHikes(),
+          ])),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => AddHikePage(
-                        currentUser: currentUser,
-                        cloudRepository: cloudRepository,
+                        currentUser: widget.currentUser,
+                        cloudRepository: widget.cloudRepository,
                       )));
         },
         tooltip: 'Ajouter ',
         child: Icon(Icons.add),
       ),
+    );
+  }
+
+  Widget _listAllHikes() {
+    return StreamBuilder<List<Hike>>(
+      stream: widget.cloudRepository.getHikes(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return CircularProgressIndicator();
+          default:
+            return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) => Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: HikeCard(
+                          widget.cloudRepository, snapshot.data[index]),
+                    ));
+        }
+      },
+    );
+  }
+
+  Widget _listMyHikes() {
+    return StreamBuilder<List<Hike>>(
+      stream: widget.cloudRepository.getMyHikes(widget.currentUser),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return CircularProgressIndicator();
+          default:
+            return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) => Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: HikeCard(
+                      widget.cloudRepository, snapshot.data[index]),
+                ));
+        }
+      },
+    );
+  }
+
+  Widget _listRegisterHikes() {
+    return StreamBuilder<List<Hike>>(
+      stream: widget.cloudRepository.getRegisterHikes(widget.currentUser),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return CircularProgressIndicator();
+          default:
+            return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) => Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: HikeCard(
+                      widget.cloudRepository, snapshot.data[index]),
+                ));
+        }
+      },
+    );
+  }
+
+  Widget _listOldHikes() {
+    return StreamBuilder<List<Hike>>(
+      stream: widget.cloudRepository.getOldHikes(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return CircularProgressIndicator();
+          default:
+            return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) => Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: HikeCard(
+                      widget.cloudRepository, snapshot.data[index]),
+                ));
+        }
+      },
     );
   }
 }
