@@ -32,15 +32,9 @@ class HikeCard extends StatelessWidget {
         isThreeLine: true,
         onTap: () {
           Navigator.push(
-              context,
-              PageRouteBuilder(
-                transitionDuration: Duration(milliseconds: 800),
-                pageBuilder: (_, __, ___) => BlocProvider<HikeBloc>(
-                    builder: (context) =>
-                        HikeBloc(cloudRepository: _cloudRepository),
-                    child: DetailHikePage(
-                        cloudRepository: _cloudRepository, id: _hike.id)),
-              ));
+            context,
+            _HikeCardPageRoute(cloudRepository: _cloudRepository, id: _hike.id),
+          );
         },
       ),
       decoration: BoxDecoration(
@@ -48,5 +42,24 @@ class HikeCard extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
     );
+  }
+}
+
+class _HikeCardPageRoute extends MaterialPageRoute {
+  _HikeCardPageRoute(
+      {@required CloudRepository cloudRepository, @required String id})
+      : super(
+            builder: (context) => BlocProvider<HikeBloc>(
+                builder: (context) =>
+                    HikeBloc(cloudRepository: cloudRepository),
+                child: DetailHikePage(
+                  cloudRepository: cloudRepository,
+                  id: id,
+                )));
+
+  @override
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    return FadeTransition(opacity: animation, child: child);
   }
 }

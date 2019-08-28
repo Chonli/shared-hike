@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_hike/db/cloud_repository.dart';
 import 'package:shared_hike/util/validators.dart';
-import 'package:shared_hike/fireauth/login_bloc/bloc.dart';
+import 'package:shared_hike/authentification/login_bloc/bloc.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   CloudRepository _cloudRepository;

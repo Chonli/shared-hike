@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_hike/db/cloud_repository.dart';
-import 'package:shared_hike/fireauth/authentication_bloc/bloc.dart';
-import 'package:shared_hike/fireauth/login_bloc/bloc.dart';
-import 'package:shared_hike/ui/register_page.dart';
+import 'package:shared_hike/authentification/authentication_bloc/bloc.dart';
+import 'package:shared_hike/authentification/login_bloc/bloc.dart';
+import 'package:shared_hike/authentification/register_page.dart';
 import 'package:shared_hike/util/validators.dart';
 
 class LoginForm extends StatefulWidget {
@@ -24,6 +24,7 @@ class _LoginFormState extends State<LoginForm>
   AnimationController _loginButtonController;
   Animation<double> _buttonAnimation;
   LoginBloc _loginBloc;
+  bool _obscurePassword = true;
 
   CloudRepository get _cloudRepository => widget._cloudRepository;
 
@@ -116,8 +117,20 @@ class _LoginFormState extends State<LoginForm>
                     decoration: InputDecoration(
                       icon: Icon(Icons.lock),
                       labelText: 'Mot de passe',
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
                     ),
-                    obscureText: true,
+                    obscureText: _obscurePassword,
                     autovalidate: true,
                     autocorrect: false,
                     validator: (_) {

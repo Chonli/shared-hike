@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_hike/fireauth/authentication_bloc/bloc.dart';
-import 'package:shared_hike/fireauth/register_bloc/bloc.dart';
+import 'package:shared_hike/authentification/authentication_bloc/bloc.dart';
+import 'package:shared_hike/authentification/register_bloc/bloc.dart';
 
 class RegisterForm extends StatefulWidget {
   State<RegisterForm> createState() => _RegisterFormState();
@@ -14,6 +14,7 @@ class _RegisterFormState extends State<RegisterForm> with SingleTickerProviderSt
   AnimationController _loginButtonController;
   Animation<double> _buttonAnimation;
   RegisterBloc _registerBloc;
+  bool _obscurePassword = true;
 
   bool get isPopulated =>
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
@@ -104,6 +105,18 @@ class _RegisterFormState extends State<RegisterForm> with SingleTickerProviderSt
                     decoration: InputDecoration(
                       icon: Icon(Icons.lock),
                       labelText: 'Mot de passe',
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
                     ),
                     obscureText: true,
                     autocorrect: false,

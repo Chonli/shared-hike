@@ -2,14 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_hike/fireauth/authentication_bloc/bloc.dart';
-import 'package:shared_hike/fireauth/my_bloc_delegate.dart';
+import 'package:shared_hike/authentification/authentication_bloc/bloc.dart';
 import 'package:shared_hike/db/cloud_repository.dart';
 import 'package:shared_hike/ui/home_page.dart';
-import 'package:shared_hike/ui/login_page.dart';
+import 'package:shared_hike/authentification/login_page.dart';
 
 void main() {
-  BlocSupervisor.delegate = MyBlocDelegate();
+  BlocSupervisor.delegate = _MyBlocDelegate();
   final CloudRepository cloudRepository = CloudRepository();
   runApp(BlocProvider(
       builder: (context) => AuthenticationBloc(cloudRepository: cloudRepository)
@@ -50,5 +49,26 @@ class MyApp extends StatelessWidget {
           },
         ),
       );
+  }
+}
+
+
+class _MyBlocDelegate extends BlocDelegate {
+  @override
+  void onEvent(Bloc bloc, Object event) {
+    super.onEvent(bloc, event);
+    print(event);
+  }
+
+  @override
+  void onError(Bloc bloc, Object error, StackTrace stacktrace) {
+    super.onError(bloc, error, stacktrace);
+    print(error);
+  }
+
+  @override
+  void onTransition(Bloc bloc, Transition transition) {
+    super.onTransition(bloc, transition);
+    print(transition);
   }
 }
