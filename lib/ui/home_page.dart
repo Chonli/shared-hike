@@ -2,10 +2,10 @@ import 'package:package_info/package_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_hike/authentification/authentication_bloc/bloc.dart';
-import 'package:shared_hike/db/cloud_repository.dart';
+import 'package:shared_hike/model/cloud_repository.dart';
 import 'package:shared_hike/ui/hike_card.dart';
 import 'add_hike_page.dart';
-import 'package:shared_hike/db/hike.dart';
+import 'package:shared_hike/model/hike.dart';
 
 class HomePage extends StatefulWidget {
   final String title;

@@ -7,3 +7,4 @@ Flutter application to manage shared hike with other people
 - Add search image page
 - Display gpx on map
 - Add signin with google account
+- Use provider to pass data

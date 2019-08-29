@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_hike/db/cloud_repository.dart';
+import 'package:shared_hike/model/cloud_repository.dart';
 import 'package:shared_hike/authentification/authentication_bloc/bloc.dart';
 import 'package:shared_hike/authentification/login_bloc/bloc.dart';
 import 'package:shared_hike/authentification/register_page.dart';
