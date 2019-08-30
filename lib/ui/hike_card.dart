@@ -16,8 +16,13 @@ class HikeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListTile(
+    return Card(
+        margin: EdgeInsets.all(8.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        elevation: 5.0,
+        child: ListTile(
         leading: Hero(
             tag: 'poster-' + _hike.id,
             child: CachedNetworkImage(
@@ -36,10 +41,6 @@ class HikeCard extends StatelessWidget {
             _HikeCardPageRoute(cloudRepository: _cloudRepository, id: _hike.id),
           );
         },
-      ),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black26),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
     );
   }
