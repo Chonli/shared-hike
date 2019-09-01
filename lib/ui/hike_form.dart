@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_hike/model/hike.dart';
 import 'package:shared_hike/firecloud/hike_bloc/bloc.dart';
+import 'package:shared_hike/search_image/bloc.dart';
 import 'package:shared_hike/search_image/search_image_page.dart';
 
 class HikeForm extends StatefulWidget {
@@ -70,39 +71,49 @@ class _HikeFormState extends State<HikeForm>
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<HikeBloc, HikeState>(
-      listener: (context, state) {
-        if (state.isSubmitting) {
-          setState(() {
-            _isLoading = true;
-          });
-        }
-        if (state.isSuccess) {
-          setState(() {
-            _isLoading = false;
-          });
-          Navigator.of(context).pop();
-        }
-        if (state.isFailure) {
-          setState(() {
-            _isLoading = false;
-          });
-          Scaffold.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Registration Failure'),
-                    Icon(Icons.error),
-                  ],
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SearchImageBloc, SearchImageState>(
+            listener: (context, state) {
+/*              if(state is ResultSearchSuccessState){
+                setState(() {
+                  _isLoading = state.urlResult;
+                });
+              }*/
+            }),
+        BlocListener<HikeBloc, HikeState>(listener: (context, state) {
+          if (state.isSubmitting) {
+            setState(() {
+              _isLoading = true;
+            });
+          }
+          if (state.isSuccess) {
+            setState(() {
+              _isLoading = false;
+            });
+            Navigator.of(context).pop();
+          }
+          if (state.isFailure) {
+            setState(() {
+              _isLoading = false;
+            });
+            Scaffold.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Registration Failure'),
+                      Icon(Icons.error),
+                    ],
+                  ),
+                  backgroundColor: Colors.red,
                 ),
-                backgroundColor: Colors.red,
-              ),
-            );
-        }
-      },
+              );
+          }
+        }),
+      ],
       child: _isLoading
           ? CircularProgressIndicator()
           : BlocBuilder<HikeBloc, HikeState>(
@@ -147,7 +158,7 @@ class _HikeFormState extends State<HikeForm>
                           decoration: InputDecoration(
                               icon: Icon(Icons.photo_size_select_actual),
                               labelText: 'Adresse image',
-                              suffix: IconButton(
+                              suffixIcon: IconButton(
                                 color: Colors.black,
                                 icon: Icon(Icons.search),
                                 onPressed: () {

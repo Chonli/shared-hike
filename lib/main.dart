@@ -7,14 +7,27 @@ import 'package:shared_hike/model/cloud_repository.dart';
 import 'package:shared_hike/ui/home_page.dart';
 import 'package:shared_hike/authentification/login_page.dart';
 
+import 'authentification/login_bloc/bloc.dart';
+import 'authentification/register_bloc/bloc.dart';
+import 'firecloud/hike_bloc/bloc.dart';
+import 'search_image/bloc.dart';
+
 void main() {
   BlocSupervisor.delegate = _MyBlocDelegate();
   final CloudRepository cloudRepository = CloudRepository();
-  runApp(BlocProvider(
-      builder: (context) => AuthenticationBloc(cloudRepository: cloudRepository)
-        ..dispatch(AppStartedEvent()),
-      child: MyApp(cloudRepository: cloudRepository)
-  ));
+  runApp(MultiBlocProvider(providers: [
+    BlocProvider<AuthenticationBloc>(
+        builder: (context) =>
+            AuthenticationBloc(cloudRepository: cloudRepository)
+              ..dispatch(AppStartedEvent())),
+    BlocProvider<LoginBloc>(
+        builder: (context) => LoginBloc(cloudRepository: cloudRepository)),
+    BlocProvider<RegisterBloc>(
+        builder: (context) => RegisterBloc(cloudRepository: cloudRepository)),
+    BlocProvider<SearchImageBloc>(builder: (context) => SearchImageBloc()),
+    BlocProvider<HikeBloc>(
+        builder: (context) => HikeBloc(cloudRepository: cloudRepository)),
+  ], child: MyApp(cloudRepository: cloudRepository)));
 }
 
 class MyApp extends StatelessWidget {
@@ -29,29 +42,31 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: _title,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        localizationsDelegates: [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: [
-          const Locale('en', ''),
-          const Locale('fr', ''),
-        ],
-        home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+      title: _title,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', ''),
+        const Locale('fr', ''),
+      ],
+      home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
-            return state is AuthenticatedState
-                ? HomePage(cloudRepository: _cloudRepository, currentUser: state.displayName, title: _title)
-                : LoginPage(cloudRepository: _cloudRepository);
-          },
-        ),
-      );
+          return state is AuthenticatedState
+              ? HomePage(
+                  cloudRepository: _cloudRepository,
+                  currentUser: state.displayName,
+                  title: _title)
+              : LoginPage(cloudRepository: _cloudRepository);
+        },
+      ),
+    );
   }
 }
-
 
 class _MyBlocDelegate extends BlocDelegate {
   @override

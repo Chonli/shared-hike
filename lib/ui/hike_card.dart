@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:shared_hike/model/cloud_repository.dart';
 import 'package:shared_hike/model/hike.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:shared_hike/firecloud/hike_bloc/bloc.dart';
 
 import 'detail_hike_page.dart';
 
@@ -17,12 +15,12 @@ class HikeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        margin: EdgeInsets.all(8.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        elevation: 5.0,
-        child: ListTile(
+      margin: EdgeInsets.all(8.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      elevation: 5.0,
+      child: ListTile(
         leading: Hero(
             tag: 'poster-' + _hike.id,
             child: CachedNetworkImage(
@@ -50,13 +48,10 @@ class _HikeCardPageRoute extends MaterialPageRoute {
   _HikeCardPageRoute(
       {@required CloudRepository cloudRepository, @required String id})
       : super(
-            builder: (context) => BlocProvider<HikeBloc>(
-                builder: (context) =>
-                    HikeBloc(cloudRepository: cloudRepository),
-                child: DetailHikePage(
+            builder: (context) => DetailHikePage(
                   cloudRepository: cloudRepository,
                   id: id,
-                )));
+                ));
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,

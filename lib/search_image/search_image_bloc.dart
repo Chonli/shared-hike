@@ -19,6 +19,12 @@ class SearchImageBloc extends Bloc<SearchImageEvent, SearchImageState> {
       }catch(e){
         yield SearchImageErrorState();
       }
+    }else if(event is ResultSearchImageEvent){
+      if(event.result.isEmpty){
+        yield ResultSearchErrorState();
+      }else{
+        yield ResultSearchSuccessState(event.result);
+      }
     }
   }
 }

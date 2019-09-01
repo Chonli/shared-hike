@@ -161,7 +161,6 @@ class _HomePageState extends State<HomePage>
               MaterialPageRoute(
                   builder: (context) => AddHikePage(
                         currentUser: widget.currentUser,
-                        cloudRepository: widget.cloudRepository,
                       )));
         },
         tooltip: 'Ajouter ',

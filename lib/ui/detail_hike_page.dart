@@ -133,7 +133,6 @@ class _DetailHikePageState extends State<DetailHikePage> {
                   MaterialPageRoute(
                       builder: (context) => EditHikePage(
                             hike: hike,
-                            cloudRepository: _cloudRepository,
                           )));
             },
             tooltip: 'Modifier',

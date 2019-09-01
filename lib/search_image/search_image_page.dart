@@ -1,26 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:shared_hike/model/search_image.dart';
+import 'bloc.dart';
 
-class SearchImagePage extends StatefulWidget {
+class SearchImagePage extends StatelessWidget {
+  final TextEditingController _filter = TextEditingController();
+
   SearchImagePage({
     Key key,
   }) : super(key: key);
-
-  @override
-  _SearchImagePageState createState() => _SearchImagePageState();
-}
-
-class _SearchImagePageState extends State<SearchImagePage> {
-  final SearchImage searchImage = SearchImage();
-  final TextEditingController _filter = TextEditingController();
-  String _mQuery = "";
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,58 +22,54 @@ class _SearchImagePageState extends State<SearchImagePage> {
             hintText: 'Recherche Image...',
           ),
           onSubmitted: (query) {
-            if (_mQuery != query || query != "") {
-              setState(() {
-                _mQuery = query;
-              });
+            if (query.isNotEmpty) {
+              BlocProvider.of<SearchImageBloc>(context)
+                  .dispatch(LaunchSearchImageEvent(query: query));
             }
           },
         ),
       ),
-      body: FutureBuilder(
-          future: SearchImage().searchImages(_mQuery),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-              case ConnectionState.waiting:
-                return Center(child: CircularProgressIndicator());
-              default:
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  if (snapshot.data.length > 0) {
-                    return GridView.builder(
-                        itemCount: snapshot.data.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisSpacing: 5,
-                            mainAxisSpacing: 5,
-                            crossAxisCount: 2),
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            child: Card(
-                                elevation: 5.0,
-                                child: Container(
-                                    alignment: Alignment.center,
-                                    child: CachedNetworkImage(
-                                      placeholder: (context, url) =>
-                                          CircularProgressIndicator(),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
-                                      imageUrl: snapshot.data[index],
-                                      cacheManager: DefaultCacheManager(),
-                                    ))),
-                            onTap: () {
-                              print('select ' + snapshot.data[index]);
-                              Navigator.of(context).pop();
-                            },
-                          );
-                        });
-                  } else {
-                    return Container();
-                  }
-                }
-            }
-          }),
+      body: BlocBuilder<SearchImageBloc, SearchImageState>(
+          builder: (context, state) {
+        if (state is SearchImageInitialState) {
+          return Container();
+        } else if (state is SearchImageLoadingState) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is SearchImageErrorState) {
+          return Center(child: Text('Pas d\'image trouvé'));
+        } else if (state is SearchImageSuccessState) {
+          if (state.urlResult.length == 0) {
+            return Center(child: Text('Pas d\'image trouvé'));
+          } else {
+            return GridView.builder(
+                itemCount: state.urlResult.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisSpacing: 5, mainAxisSpacing: 5, crossAxisCount: 2),
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    child: Card(
+                        elevation: 5.0,
+                        child: Container(
+                            alignment: Alignment.center,
+                            child: CachedNetworkImage(
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                              imageUrl: state.urlResult[index],
+                              cacheManager: DefaultCacheManager(),
+                            ))),
+                    onTap: () {
+                      print('select ' + state.urlResult[index]);
+                      Navigator.of(context).pop();
+                    },
+                  );
+                });
+          }
+        } else {
+          return Container();
+        }
+      }),
     );
   }
 }

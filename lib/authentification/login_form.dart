@@ -177,8 +177,7 @@ class _LoginFormState extends State<LoginForm>
                             onPressed: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(builder: (context) {
-                                  return RegisterPage(
-                                      cloudRepository: _cloudRepository);
+                                  return RegisterPage();
                                 }),
                               );
                             }),

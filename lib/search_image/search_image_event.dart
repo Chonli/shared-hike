@@ -14,3 +14,12 @@ class LaunchSearchImageEvent extends SearchImageEvent {
   @override
   String toString() => 'LaunchSearchImageEvent query: $query';
 }
+
+class ResultSearchImageEvent extends SearchImageEvent {
+  final String result;
+
+  ResultSearchImageEvent({@required this.result}) : super([result]);
+
+  @override
+  String toString() => 'ResultSearchImageEvent query: $result';
+}
