@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_hike/authentification/login_bloc/login_bloc.dart';
-import 'package:shared_hike/db/cloud_repository.dart';
+import 'package:shared_hike/model/cloud_repository.dart';
 import 'login_form.dart';
 
 class LoginPage extends StatelessWidget {
@@ -17,10 +17,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Login')),
-      body: BlocProvider<LoginBloc>(
-        builder: (context) => LoginBloc(cloudRepository: _cloudRepository),
-        child: LoginForm(cloudRepository: _cloudRepository),
-      ),
+      body: LoginForm(cloudRepository: _cloudRepository),
     );
   }
 }

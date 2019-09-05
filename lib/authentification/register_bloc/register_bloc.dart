@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_hike/authentification/register_bloc/bloc.dart';
-import 'package:shared_hike/db/cloud_repository.dart';
+import 'package:shared_hike/model/cloud_repository.dart';
 import 'package:shared_hike/util/validators.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {

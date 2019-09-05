@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:shared_hike/db/cloud_repository.dart';
+import 'package:shared_hike/model/cloud_repository.dart';
 import './bloc.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {

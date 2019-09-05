@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_hike/db/cloud_repository.dart';
+import 'package:shared_hike/model/cloud_repository.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:shared_hike/db/hike.dart';
+import 'package:shared_hike/model/hike.dart';
 import 'package:shared_hike/firecloud/hike_bloc/bloc.dart';
 import 'package:shared_hike/ui/edit_hike_page.dart';
 
@@ -133,7 +133,6 @@ class _DetailHikePageState extends State<DetailHikePage> {
                   MaterialPageRoute(
                       builder: (context) => EditHikePage(
                             hike: hike,
-                            cloudRepository: _cloudRepository,
                           )));
             },
             tooltip: 'Modifier',

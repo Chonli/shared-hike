@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:shared_hike/db/hike.dart';
+import 'package:shared_hike/model/hike.dart';
 
 @immutable
 abstract class HikeEvent extends Equatable {

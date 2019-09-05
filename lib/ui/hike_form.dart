@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_hike/db/hike.dart';
+import 'package:shared_hike/model/hike.dart';
 import 'package:shared_hike/firecloud/hike_bloc/bloc.dart';
+import 'package:shared_hike/search_image/bloc.dart';
+import 'package:shared_hike/search_image/search_image_page.dart';
 
 class HikeForm extends StatefulWidget {
   final String _currentUser;
@@ -144,9 +146,24 @@ class _HikeFormState extends State<HikeForm>
                         TextFormField(
                           controller: _imageController,
                           decoration: InputDecoration(
-                            icon: Icon(Icons.photo_size_select_actual),
-                            labelText: 'Adresse image',
-                          ),
+                              icon: Icon(Icons.photo_size_select_actual),
+                              labelText: 'Adresse image',
+                              suffixIcon: IconButton(
+                                color: Colors.black,
+                                icon: Icon(Icons.search),
+                                onPressed: () async {
+                                  var ret = await Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (context) {
+                                      return SearchImagePage();
+                                    }),
+                                  );
+                                  setState(() {
+                                    if(ret is String && ret.isNotEmpty) {
+                                      _imageController.text = ret;
+                                    }
+                                  });
+                                },
+                              )),
                           obscureText: false,
                           autocorrect: false,
                           autovalidate: true,
