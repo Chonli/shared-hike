@@ -29,18 +29,3 @@ class SearchImageErrorState  extends SearchImageState {
   @override
   String toString() => 'SearchImageErrorState';
 }
-
-class ResultSearchSuccessState  extends SearchImageState {
-  final String urlResult;
-
-  ResultSearchSuccessState(this.urlResult) : super([urlResult]);
-
-  @override
-  String toString() => 'ResultSearchSuccessState { urlResult: $urlResult }';
-}
-
-class ResultSearchErrorState  extends SearchImageState {
-
-  @override
-  String toString() => 'ResultSearchErrorState';
-}

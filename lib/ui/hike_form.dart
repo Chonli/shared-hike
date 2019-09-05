@@ -71,49 +71,39 @@ class _HikeFormState extends State<HikeForm>
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<SearchImageBloc, SearchImageState>(
-            listener: (context, state) {
-/*              if(state is ResultSearchSuccessState){
-                setState(() {
-                  _isLoading = state.urlResult;
-                });
-              }*/
-            }),
-        BlocListener<HikeBloc, HikeState>(listener: (context, state) {
-          if (state.isSubmitting) {
-            setState(() {
-              _isLoading = true;
-            });
-          }
-          if (state.isSuccess) {
-            setState(() {
-              _isLoading = false;
-            });
-            Navigator.of(context).pop();
-          }
-          if (state.isFailure) {
-            setState(() {
-              _isLoading = false;
-            });
-            Scaffold.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                  content: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Registration Failure'),
-                      Icon(Icons.error),
-                    ],
-                  ),
-                  backgroundColor: Colors.red,
+    return BlocListener<HikeBloc, HikeState>(
+      listener: (context, state) {
+        if (state.isSubmitting) {
+          setState(() {
+            _isLoading = true;
+          });
+        }
+        if (state.isSuccess) {
+          setState(() {
+            _isLoading = false;
+          });
+          Navigator.of(context).pop();
+        }
+        if (state.isFailure) {
+          setState(() {
+            _isLoading = false;
+          });
+          Scaffold.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Registration Failure'),
+                    Icon(Icons.error),
+                  ],
                 ),
-              );
-          }
-        }),
-      ],
+                backgroundColor: Colors.red,
+              ),
+            );
+        }
+      },
       child: _isLoading
           ? CircularProgressIndicator()
           : BlocBuilder<HikeBloc, HikeState>(
@@ -161,12 +151,17 @@ class _HikeFormState extends State<HikeForm>
                               suffixIcon: IconButton(
                                 color: Colors.black,
                                 icon: Icon(Icons.search),
-                                onPressed: () {
-                                  Navigator.of(context).push(
+                                onPressed: () async {
+                                  var ret = await Navigator.of(context).push(
                                     MaterialPageRoute(builder: (context) {
                                       return SearchImagePage();
                                     }),
                                   );
+                                  setState(() {
+                                    if(ret is String && ret.isNotEmpty) {
+                                      _imageController.text = ret;
+                                    }
+                                  });
                                 },
                               )),
                           obscureText: false,

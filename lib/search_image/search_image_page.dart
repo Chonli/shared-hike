@@ -34,7 +34,7 @@ class SearchImagePage extends StatelessWidget {
         if (state is SearchImageInitialState) {
           return Container();
         } else if (state is SearchImageLoadingState) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LinearProgressIndicator());
         } else if (state is SearchImageErrorState) {
           return Center(child: Text('Pas d\'image trouvé'));
         } else if (state is SearchImageSuccessState) {
@@ -60,8 +60,7 @@ class SearchImagePage extends StatelessWidget {
                               cacheManager: DefaultCacheManager(),
                             ))),
                     onTap: () {
-                      print('select ' + state.urlResult[index]);
-                      Navigator.of(context).pop();
+                      Navigator.pop(context, state.urlResult[index]);
                     },
                   );
                 });
