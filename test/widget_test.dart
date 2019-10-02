@@ -16,8 +16,9 @@ void main() {
     // Build our app and trigger a frame.
     final CloudRepository cloudRepository = CloudRepository();
     await tester.pumpWidget(BlocProvider(
-      builder: (context) => AuthenticationBloc(cloudRepository: cloudRepository)
-        ..dispatch(AppStartedEvent()),
-      child: MyApp(cloudRepository: cloudRepository)));
+        builder: (context) =>
+            AuthenticationBloc(cloudRepository: cloudRepository)
+              ..dispatch(AppStartedEvent()),
+        child: MyApp()));
   });
 }

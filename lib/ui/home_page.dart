@@ -6,18 +6,13 @@ import 'package:shared_hike/model/cloud_repository.dart';
 import 'package:shared_hike/ui/hike_card.dart';
 import 'add_hike_page.dart';
 import 'package:shared_hike/model/hike.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
   final String currentUser;
-  final CloudRepository cloudRepository;
 
-  HomePage(
-      {Key key,
-      @required this.cloudRepository,
-      @required this.currentUser,
-      this.title})
-      : super(key: key);
+  HomePage({Key key, @required this.currentUser, this.title}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -37,8 +32,8 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-
-    _tabController = TabController(vsync: this, initialIndex: 0, length: myTabs.length);
+    _tabController =
+        TabController(vsync: this, initialIndex: 0, length: myTabs.length);
   }
 
   void manageDisconnect(BuildContext context) {
@@ -80,6 +75,8 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    final CloudRepository cloudRepository =
+        Provider.of<CloudRepository>(context);
     return Scaffold(
       drawer: Drawer(
         child: ListView(
@@ -149,10 +146,10 @@ class _HomePageState extends State<HomePage>
             ];
           },
           body: TabBarView(controller: _tabController, children: [
-            _listHikes(widget.cloudRepository.getHikes()),
-            _listHikes(widget.cloudRepository.getMyHikes(widget.currentUser)),
-            _listHikes(widget.cloudRepository.getRegisterHikes(widget.currentUser)),
-            _listHikes(widget.cloudRepository.getOldHikes()),
+            _listHikes(cloudRepository.getHikes()),
+            _listHikes(cloudRepository.getMyHikes(widget.currentUser)),
+            _listHikes(cloudRepository.getRegisterHikes(widget.currentUser)),
+            _listHikes(cloudRepository.getOldHikes()),
           ])),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -179,10 +176,9 @@ class _HomePageState extends State<HomePage>
             return CircularProgressIndicator();
           default:
             return ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) => HikeCard(
-                          widget.cloudRepository, snapshot.data[index]),
-                    );
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) => HikeCard(snapshot.data[index]),
+            );
         }
       },
     );

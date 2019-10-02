@@ -11,33 +11,31 @@ import 'authentification/login_bloc/bloc.dart';
 import 'authentification/register_bloc/bloc.dart';
 import 'firecloud/hike_bloc/bloc.dart';
 import 'search_image/bloc.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   BlocSupervisor.delegate = _MyBlocDelegate();
   final CloudRepository cloudRepository = CloudRepository();
-  runApp(MultiBlocProvider(providers: [
-    BlocProvider<AuthenticationBloc>(
+  runApp(MultiProvider(providers: [
+    Provider<CloudRepository>(builder: (context) => cloudRepository),
+    Provider<AuthenticationBloc>(
         builder: (context) =>
             AuthenticationBloc(cloudRepository: cloudRepository)
               ..dispatch(AppStartedEvent())),
-    BlocProvider<LoginBloc>(
+    Provider<LoginBloc>(
         builder: (context) => LoginBloc(cloudRepository: cloudRepository)),
-    BlocProvider<RegisterBloc>(
+    Provider<RegisterBloc>(
         builder: (context) => RegisterBloc(cloudRepository: cloudRepository)),
-    BlocProvider<SearchImageBloc>(builder: (context) => SearchImageBloc()),
-    BlocProvider<HikeBloc>(
+    Provider<SearchImageBloc>(builder: (context) => SearchImageBloc()),
+    Provider<HikeBloc>(
         builder: (context) => HikeBloc(cloudRepository: cloudRepository)),
-  ], child: MyApp(cloudRepository: cloudRepository)));
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
   final String _title = 'Shared Hike';
-  final CloudRepository _cloudRepository;
 
-  MyApp({Key key, @required CloudRepository cloudRepository})
-      : assert(cloudRepository != null),
-        _cloudRepository = cloudRepository,
-        super(key: key);
+  MyApp({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +55,8 @@ class MyApp extends StatelessWidget {
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
           return state is AuthenticatedState
-              ? HomePage(
-                  cloudRepository: _cloudRepository,
-                  currentUser: state.displayName,
-                  title: _title)
-              : LoginPage(cloudRepository: _cloudRepository);
+              ? HomePage(currentUser: state.displayName, title: _title)
+              : LoginPage();
         },
       ),
     );

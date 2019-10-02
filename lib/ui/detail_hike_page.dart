@@ -7,16 +7,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shared_hike/model/hike.dart';
 import 'package:shared_hike/firecloud/hike_bloc/bloc.dart';
 import 'package:shared_hike/ui/edit_hike_page.dart';
+import 'package:provider/provider.dart';
 
 class DetailHikePage extends StatefulWidget {
   final String _id;
-  final CloudRepository _cloudRepository;
 
-  DetailHikePage(
-      {Key key, @required CloudRepository cloudRepository, @required String id})
+  DetailHikePage({Key key, @required String id})
       : assert(id != null),
-        assert(cloudRepository != null),
-        _cloudRepository = cloudRepository,
         _id = id,
         super(key: key);
 
@@ -25,14 +22,15 @@ class DetailHikePage extends StatefulWidget {
 
 class _DetailHikePageState extends State<DetailHikePage> {
   String get _id => widget._id;
+  CloudRepository _cloudRepository;
 
-  CloudRepository get _cloudRepository => widget._cloudRepository;
   HikeBloc _hikeBloc;
   String _currentId = "";
 
   @override
   void initState() {
     super.initState();
+    _cloudRepository = Provider.of<CloudRepository>(context, listen: false);
     _hikeBloc = BlocProvider.of<HikeBloc>(context);
     _cloudRepository.getCurrentUserId().then((currentId) {
       setState(() {

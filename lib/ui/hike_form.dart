@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_hike/model/hike.dart';
 import 'package:shared_hike/firecloud/hike_bloc/bloc.dart';
-import 'package:shared_hike/search_image/bloc.dart';
 import 'package:shared_hike/search_image/search_image_page.dart';
 
 class HikeForm extends StatefulWidget {
@@ -158,7 +157,7 @@ class _HikeFormState extends State<HikeForm>
                                     }),
                                   );
                                   setState(() {
-                                    if(ret is String && ret.isNotEmpty) {
+                                    if (ret is String && ret.isNotEmpty) {
                                       _imageController.text = ret;
                                     }
                                   });

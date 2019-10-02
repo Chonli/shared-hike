@@ -5,14 +5,10 @@ import 'package:shared_hike/authentification/authentication_bloc/bloc.dart';
 import 'package:shared_hike/authentification/login_bloc/bloc.dart';
 import 'package:shared_hike/authentification/register_page.dart';
 import 'package:shared_hike/util/validators.dart';
+import 'package:provider/provider.dart';
 
 class LoginForm extends StatefulWidget {
-  final CloudRepository _cloudRepository;
-
-  LoginForm({Key key, @required CloudRepository cloudRepository})
-      : assert(cloudRepository != null),
-        _cloudRepository = cloudRepository,
-        super(key: key);
+  LoginForm({Key key}) : super(key: key);
 
   State<LoginForm> createState() => _LoginFormState();
 }
@@ -25,8 +21,6 @@ class _LoginFormState extends State<LoginForm>
   Animation<double> _buttonAnimation;
   LoginBloc _loginBloc;
   bool _obscurePassword = true;
-
-  CloudRepository get _cloudRepository => widget._cloudRepository;
 
   bool get isPopulated =>
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
@@ -201,6 +195,8 @@ class _LoginFormState extends State<LoginForm>
   }
 
   void manageForgotPassword(context) {
+    final CloudRepository cloudRepository =
+        Provider.of<CloudRepository>(context);
     TextEditingController emailFieldController = TextEditingController();
     showDialog(
       context: context,
@@ -235,7 +231,7 @@ class _LoginFormState extends State<LoginForm>
             FlatButton(
               child: const Text('Envoyer'),
               onPressed: () {
-                _cloudRepository.sendPasswordResetEmail(
+                cloudRepository.sendPasswordResetEmail(
                     email: emailFieldController.text);
                 Navigator.pop(context);
               },

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:shared_hike/model/cloud_repository.dart';
 import 'package:shared_hike/model/hike.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -8,9 +7,8 @@ import 'detail_hike_page.dart';
 
 class HikeCard extends StatelessWidget {
   final Hike _hike;
-  final CloudRepository _cloudRepository;
 
-  HikeCard(this._cloudRepository, this._hike);
+  HikeCard(this._hike);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +34,7 @@ class HikeCard extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            _HikeCardPageRoute(cloudRepository: _cloudRepository, id: _hike.id),
+            _HikeCardPageRoute(id: _hike.id),
           );
         },
       ),
@@ -45,11 +43,9 @@ class HikeCard extends StatelessWidget {
 }
 
 class _HikeCardPageRoute extends MaterialPageRoute {
-  _HikeCardPageRoute(
-      {@required CloudRepository cloudRepository, @required String id})
+  _HikeCardPageRoute({@required String id})
       : super(
             builder: (context) => DetailHikePage(
-                  cloudRepository: cloudRepository,
                   id: id,
                 ));
 
